@@ -2,10 +2,11 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { UserData } from "./context/UserContext";
-import Home from "./pages/home";
-import Login from "./pages/login";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Account from "./pages/Account";
+import NavigationBar from "./components/NavigationBar";
 
 const App = () => {
   const { loading, isAuth, user } = UserData();
@@ -20,6 +21,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
+          {isAuth  && <NavigationBar />}
         </BrowserRouter>
       )}
 

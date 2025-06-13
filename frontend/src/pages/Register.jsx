@@ -1,5 +1,8 @@
   import React, { useState } from 'react';
   import { Link } from 'react-router-dom';
+  import { UserData } from '../context/UserContext';
+  import { useNavigate } from 'react-router-dom';
+
 
   const Register = () => {
     const [name, setName] = useState("");
@@ -8,6 +11,8 @@
     const [gender, setGender] = useState("");
     const [file, setFile] = useState("");
     const [filePrev, setFilePrev] = useState("");
+
+    const {registerUser,loading} = UserData();
 
     const changeFileHandler = (e) => {
       const file = e.target.files[0];
@@ -21,13 +26,28 @@
       };
     };
 
+    const navigate = useNavigate();
+
+
     const submitHandler = (e) => {
       e.preventDefault();
-      console.log(name, email, password, gender, file);
+      
+      const formdata = new FormData();
+
+      formdata.append("name", name);
+      formdata.append("email", email);
+      formdata.append("password", password);
+      formdata.append("gender", gender);
+      formdata.append("file", file);
+
+      registerUser(formdata, navigate);
     };
 
     return (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <>
+      {
+        loading?<h1>Loading...</h1>:
+        <div className="flex justify-center items-center h-screen bg-gray-100">
         <div className="w-[90%] md:w-[60%] flex shadow-lg rounded-2xl border border-gray-300 bg-white overflow-hidden">
           
           {/* Left side: Form */}
@@ -103,6 +123,8 @@
           </div>
         </div>
       </div>
+      }
+      </>
     );
   };
 
