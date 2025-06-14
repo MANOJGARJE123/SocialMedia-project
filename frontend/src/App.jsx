@@ -2,11 +2,15 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { UserData } from "./context/UserContext";
+
+// Pages & Components
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
 import Account from "./pages/Account";
-import NavigationBar from "./components/NavigationBar"; // ✅ Import NavigationBar
+import Reels from "./pages/Reels";
+import NavigationBar from "./components/NavigationBar";
+import NotFound from "./components/NotFound";
 
 const App = () => {
   const { loading, isAuth, user } = UserData();
@@ -14,23 +18,23 @@ const App = () => {
   return (
     <>
       {loading ? (
-        <h1>Loading...</h1>
+        <h1 className="text-center text-xl font-semibold mt-10">Loading...</h1>
       ) : (
         <BrowserRouter>
-          <>
-            <Routes>
-              <Route path="/" element={isAuth ? <Home /> : <Login />} />
-              <Route
-                path="/account"
-                element={isAuth ? <Account user={user} /> : <Login />}
-              />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-            </Routes>
+          <Routes>
+            <Route path="/" element={isAuth ? <Home /> : <Login />} />
+            <Route path="/reels" element={isAuth ? <Reels /> : <Login />} />
+            <Route
+              path="/account"
+              element={isAuth ? <Account user={user} /> : <Login />}
+            />
+            <Route path="/login" element={!isAuth ? <Login /> : <Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
 
-            {/* ✅ Show NavigationBar only when user is authenticated */}
-            {isAuth && <NavigationBar />}
-          </>
+          {/* ✅ Show NavigationBar only when user is authenticated */}
+          {isAuth && <NavigationBar />}
         </BrowserRouter>
       )}
 
