@@ -67,7 +67,7 @@ export const PostContextProvider = ({ children }) => {
     fetchPosts();
     }, []);
 
-     return ( <PostContext.Provider value={{ reels,posts ,addPost,likePost}} > {children} </PostContext.Provider>
+     return ( <PostContext.Provider value={{ reels,posts ,addPost,likePost,addComment}} > {children} </PostContext.Provider>
   );
 };
 

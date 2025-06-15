@@ -6,10 +6,12 @@ import { UserData } from "../context/UserContext";
 import { PostData } from "../context/PostContext";
 
 const PostCard = ({ type, value }) => {
-  if (!value?.post?.url) return null; // 🔒 Skip if media is missing
+  if (!value?.post?.url) return null;
 
   const [isLike, setIsLike] = useState(false);
   const [show, setShow] = useState(false);
+  const [comment, setComment] = useState("");
+
   const { user } = UserData();
   const { likePost, addComment } = PostData();
 
@@ -17,10 +19,13 @@ const PostCard = ({ type, value }) => {
 
   useEffect(() => {
     for (let i = 0; i < value.likes.length; i++) {
-      if (value.likes[i] === user._id) setIsLike(true);
+      if (value.likes[i] === user._id) {
+        setIsLike(true);
+        break;
+      }
     }
   }, [value, user._id]);
-  
+
   const handleLike = () => {
     setIsLike(!isLike);
     likePost?.(value._id);
@@ -28,13 +33,13 @@ const PostCard = ({ type, value }) => {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    // Optional: Add comment logic here
+    addComment(value._id, comment, setComment, setShow);
   };
 
   return (
     <div className="bg-gray-100 flex items-center justify-center pt-3 pb-14">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
@@ -66,7 +71,7 @@ const PostCard = ({ type, value }) => {
               alt="post"
               className="object-cover rounded-md"
               style={{ width: "450px", height: "600px" }}
-              onError={(e) => e.target.src = "/default-post.png"} // fallback image
+              onError={(e) => (e.target.src = "/default-post.png")}
             />
           ) : (
             <video
@@ -100,8 +105,16 @@ const PostCard = ({ type, value }) => {
         {/* Comment Form */}
         {show && (
           <form className='flex gap-3 mt-2' onSubmit={handleCommentSubmit}>
-            <input type="text" className='custom-input' placeholder='Enter comment' />
-            <button className="bg-gray-100 rounded-lg px-5 py-2" type="submit">Add</button>
+            <input
+              type="text"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className='custom-input'
+              placeholder='Enter comment'
+            />
+            <button className="bg-gray-100 rounded-lg px-5 py-2" type="submit">
+              Add
+            </button>
           </form>
         )}
 
@@ -131,12 +144,10 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard;
 
+// ⛔️ NO PROFILE IMAGE NOW
 export const Comment = ({ name = "User", text = "This is a comment" }) => (
-  <div className='flex items-center space-x-2 mt-2'>
-    <img src="/default-avatar.png" alt="avatar" className="w-6 h-6 rounded-full bg-gray-300" />
-    <div>
-      <p className='text-gray-800 font-semibold'>{name}</p>
-      <p className='text-gray-500 text-sm'>{text}</p>
-    </div>
+  <div className='mt-2'>
+    <p className='text-gray-800 font-semibold'>{name}</p>
+    <p className='text-gray-500 text-sm'>{text}</p>
   </div>
 );
