@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { PostData } from "../context/PostContext";
+import { LoadingAnimation } from "./Loading";
 
 const AddPost = ({ type }) => {
   const [caption, setCaption] = useState("");

@@ -63,11 +63,19 @@ export const deletePost = TryCatch(async (req, res) => {
 
     const posts = await Post.find({ type: "post" })
       .sort({ createdAt: -1 }) 
-      .populate("owner","-password");  
+      .populate("owner","-password")
+      .populate({
+        path:"comments.user",
+        select:"-password",
+      })
     
     const reels = await Post.find({ type: "reel" })
       .sort({ createdAt: -1 }) 
-      .populate("owner","-password"); 
+      .populate("owner","-password")
+      .populate({
+        path:"comments.user",
+        select:"-password",
+      })
 
     res.json({ posts, reels });
 });

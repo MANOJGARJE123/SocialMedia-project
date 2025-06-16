@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { UserData } from "./context/UserContext";
-
 // Pages & Components
 import Home from "./pages/home";
 import Login from "./pages/login";
@@ -11,6 +10,7 @@ import Account from "./pages/Account";
 import Reels from "./pages/Reels";
 import NavigationBar from "./components/NavigationBar";
 import NotFound from "./components/NotFound";
+import { Loading } from "./components/Loading";
 
 const App = () => {
   const { loading, isAuth, user } = UserData();
@@ -18,7 +18,7 @@ const App = () => {
   return (
     <>
       {loading ? (
-        <h1 className="text-center text-xl font-semibold mt-10">Loading...</h1>
+        <Loading />
       ) : (
         <BrowserRouter>
           <Routes>

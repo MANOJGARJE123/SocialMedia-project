@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import { UserData } from "../context/UserContext";
 import { PostData } from "../context/PostContext";
+import { Link } from "react-router-dom";
+import { MdDelete } from "react-icons/md";
 
 const PostCard = ({ type, value }) => {
   if (!value?.post?.url) return null;
@@ -18,13 +20,14 @@ const PostCard = ({ type, value }) => {
   const formatDate = format(new Date(value.createdAt), "MMMM do");
 
   useEffect(() => {
+    if (!user?._id) return;
     for (let i = 0; i < value.likes.length; i++) {
       if (value.likes[i] === user._id) {
         setIsLike(true);
         break;
       }
     }
-  }, [value, user._id]);
+  }, [value, user?._id]);
 
   const handleLike = () => {
     setIsLike(!isLike);
@@ -42,22 +45,42 @@ const PostCard = ({ type, value }) => {
 
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2">
-            <img
-              src={value.owner?.profilePic?.url || "/default-avatar.png"}
-              alt="profile"
-              className="w-8 h-8 rounded-full"
-            />
-            <div>
-              <p className="text-gray-800 font-semibold">
-                {value.owner?.name || "Deleted User"}
-              </p>
-              <p className="text-gray-500 text-sm">{formatDate}</p>
+          {value.owner ? (
+            <Link to={`/user/${value.owner._id}`} className="flex items-center space-x-2">
+              <img
+                src={value.owner?.profilePic?.url || "/default-avatar.png"}
+                alt="profile"
+                className="w-8 h-8 rounded-full"
+              />
+              <div>
+                <p className="text-gray-800 font-semibold">{value.owner?.name}</p>
+                <p className="text-gray-500 text-sm">{formatDate}</p>
+              </div>
+            </Link>
+          ) : (
+            <div className="flex items-center space-x-2">
+              <img
+                src="/default-avatar.png"
+                alt="profile"
+                className="w-8 h-8 rounded-full"
+              />
+              <div>
+                <p className="text-gray-800 font-semibold">Deleted User</p>
+                <p className="text-gray-500 text-sm">{formatDate}</p>
+              </div>
             </div>
-          </div>
-          <button className="hover:bg-gray-50 rounded-full p-1 text-2xl text-gray-500">
-            <BsThreeDotsVertical />
-          </button>
+          )}
+
+          {user?._id && value?.owner?._id === user._id && (
+            <div className="text-gray-500 cursor-pointer">
+              <button
+                onClick={() => setShow(true)} // You can implement setShowModal logic
+                className="hover:bg-gray-50 rounded-full p-1 text-2xl"
+              >
+                <BsThreeDotsVertical />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Caption */}
@@ -70,13 +93,12 @@ const PostCard = ({ type, value }) => {
               src={value.post?.url}
               alt="post"
               className="object-cover rounded-md"
-              style={{ width: "450px", height: "600px" }}
               onError={(e) => (e.target.src = "/default-post.png")}
             />
           ) : (
             <video
               src={value.post?.url}
-              className='w-full h-[400px] object-cover rounded-md'
+              className='object-cover rounded-md'
               autoPlay
               controls
             />
@@ -125,12 +147,8 @@ const PostCard = ({ type, value }) => {
         <div className='mt-4'>
           <div className='comments max-h-[200px] overflow-y-auto'>
             {value.comments?.length > 0 ? (
-              value.comments.map((e) => (
-                <Comment
-                  key={e._id}
-                  name={e.user?.name || "User"}
-                  text={e.comment}
-                />
+              value.comments.map((comment) => (
+                <Comment key={comment._id} value={comment} />
               ))
             ) : (
               <p>No Comments</p>
@@ -144,10 +162,37 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard;
 
-// ⛔️ NO PROFILE IMAGE NOW
-export const Comment = ({ name = "User", text = "This is a comment" }) => (
-  <div className='mt-2'>
-    <p className='text-gray-800 font-semibold'>{name}</p>
-    <p className='text-gray-500 text-sm'>{text}</p>
-  </div>
-);
+// ✅ Comment Component
+export const Comment = ({ value }) => {
+  const { user } = UserData();
+
+  const handleDeleteComment = () => {
+    // TODO: Hook your deleteComment logic from PostData() here
+    console.log("Deleting comment:", value._id);
+  };
+
+  return (
+    <div className='mt-2 flex items-start justify-between gap-2'>
+      <div className='flex gap-2'>
+        <img
+          src={value?.user?.profilePic?.url || "/default-avatar.png"}
+          className='w-6 h-6 rounded-full'
+          alt="comment user"
+        />
+        <div>
+          <p className='text-gray-800 font-semibold'>
+            {value?.user?.name || "Deleted User"}
+          </p>
+          <p className='text-gray-500 text-sm'>{value?.comment || ""}</p>
+        </div>
+      </div>
+
+      {/* ✅ Show delete only if user is owner */}
+      {user?._id && value?.user?._id === user._id && (
+        <button onClick={handleDeleteComment} className="text-red-500 text-lg">
+          <MdDelete />
+        </button>
+      )}
+    </div>
+  );
+};
