@@ -1,25 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { UserData } from "../context/UserContext";
 import { PostData } from "../context/PostContext";
 import PostCard from "../components/PostCard";
 import { FaArrowUp, FaArrowDownLong } from "react-icons/fa6";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Account = ({ user }) => {
+const UserAccount = ({ user: loggedInUser }) => {
   const navigate = useNavigate();
-  const { logoutUser } = UserData();
   const { posts, reels } = PostData();
+  const [user, setUser] = useState([]);
+   const params = useParams();
 
   if (!user) return null;
+
+   async function fetchUser() {
+    try {
+      const { data } = await axios.get("/api/user/" + params.id);
+
+      setUser(data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }
+
+    useEffect(() => {
+    fetchUser();
+  }, [params.id]);
+
 
   const myPosts = posts?.filter((post) => post.owner?._id === user._id) || [];
   const myReels = reels?.filter((reel) => reel.owner?._id === user._id) || [];
 
   const [type, setType] = useState("post");
-
-  const logoutHandler = () => {
-    logoutUser(navigate);
-  };
 
     const [index, setIndex] = useState(0);
   
@@ -61,12 +76,6 @@ const Account = ({ user }) => {
                 <p className="text-gray-500 text-sm">
                   {user.followings?.length || 0} following
                 </p>
-                <button
-                  onClick={logoutHandler}
-                  className="bg-red-500 text-white px-4 py-1 rounded-md mt-2"
-                >
-                  Logout
-                </button>
               </div>
             </div>
 
@@ -127,4 +136,4 @@ const Account = ({ user }) => {
   );
 };
 
-export default Account;
+export default UserAccount;
