@@ -25,45 +25,38 @@ export const userProfile = TryCatch(async (req, res) => {
     res.json(user);
 });
 
-export const followandUnfollowUser = TryCatch(async(req,res)=>{
+export const followandUnfollowUser = TryCatch(async (req, res) => {
     const user = await User.findById(req.params.id);
-    const loggedInUser = await User.findById(req.user._id)
+    const loggedInUser = await User.findById(req.user._id);
 
-    if(!user) return res.staus(404).json({
-        message:"No User with this id",
-    })
+    if (!user) return res.status(404).json({ message: "No User with this id" });
 
-    if(user._id.toString()===loggedInUser._id.toString()) 
-        return res.status(404).json({
-        message:"You cant follow yourself",
-    });
+    if (user._id.toString() === loggedInUser._id.toString()) {
+        return res.status(404).json({ message: "You cant follow yourself" });
+    }
 
-    if(user.followers.includes(loggedInUser._id)){
-        const indexFollowing = loggedInUser.following.indexOf(user._id);
+    if (user.followers.includes(loggedInUser._id)) {
+        const indexFollowing = loggedInUser.followings.indexOf(user._id);
         const indexFollower = user.followers.indexOf(loggedInUser._id);
 
         loggedInUser.followings.splice(indexFollowing, 1);
         user.followers.splice(indexFollower, 1);
 
-        await loggedInUser.save()
-        await user.save()
+        await loggedInUser.save();
+        await user.save();
 
-        res.json({
-            message:" User Unfollowed"
-        })
-    }else{
-        loggedInUser.followings.push(user._id)
-        user.followers.push(loggedInUser._id)
+        res.json({ message: "User Unfollowed" });
+    } else {
+        loggedInUser.followings.push(user._id);
+        user.followers.push(loggedInUser._id);
 
         await loggedInUser.save();
         await user.save();
 
-        res.json({
-            message:"User Followed"
-        });
+        res.json({ message: "User Followed" });
     }
-});
-
+})
+ 
 export const userfollowerandFollowingData = TryCatch(async(req,res)=>{
     const user =  await User.findById(req.params.id)
     .select("-password")
