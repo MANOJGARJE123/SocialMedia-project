@@ -140,14 +140,14 @@ export const deleteComment = TryCatch(async (req, res) => {
     });
   }
 
-  if (!req.body.commentId) {
+  if (!req.query.commentId) {
     return res.status(404).json({
       message: "No commentId provided",
     });
   }
 
   const commentIndex = post.comments.findIndex(
-    (item) => item._id.toString() === req.body.commentId.toString()
+    (item) => item._id.toString() === req.query.commentId.toString()
   );
 
   if (commentIndex === -1) {

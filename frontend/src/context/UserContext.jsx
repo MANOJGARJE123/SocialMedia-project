@@ -9,13 +9,31 @@ export const UserContextProvider = ({ children }) => {
   const [isAuth, setIsAuth] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  async function loginUser(email, password, navigate) {
+    async function registerUser(formdata, navigate, fetchPosts) {
+    setLoading(true);
+    try {
+      const { data } = await axios.post("/api/auth/register", formdata);
+
+      toast.success(data.message);
+      setIsAuth(true);
+      setUser(data.user);
+      navigate("/");
+      setLoading(false);
+      fetchPosts();
+    } catch (error) {
+      toast.error(error.response.data.message);
+      setLoading(false);
+    }
+  }
+
+  async function loginUser(email, password, navigate,fetchPosts) {
     try {
       const { data } = await axios.post("/api/auth/login", { email, password });
       toast.success(data.message);
       setIsAuth(true);
       setUser(data.user);
       navigate("/");
+      fetchPosts
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
     }
@@ -63,7 +81,7 @@ export const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ loginUser, logoutUser, isAuth, setIsAuth, user, setUser, loading ,followUser}}>
+    <UserContext.Provider value={{registerUser, loginUser, logoutUser, isAuth, setIsAuth, user, setUser, loading ,followUser}}>
       {children}
     </UserContext.Provider>
   );
