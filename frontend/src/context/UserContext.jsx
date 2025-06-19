@@ -2,6 +2,7 @@ import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+
 const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
@@ -75,13 +76,23 @@ export const UserContextProvider = ({ children }) => {
     }
   }
 
+    async function updateProfilePic(id, formdata, setFile) {
+    try {
+      const { data } = await axios.put("/api/user/" + id, formdata);
+      toast.success(data.message);
+      fetchUser();
+      setFile(null);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
 
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{registerUser, loginUser, logoutUser, isAuth, setIsAuth, user, setUser, loading ,followUser}}>
+    <UserContext.Provider value={{registerUser, loginUser, logoutUser, isAuth, setIsAuth, user, setUser, loading ,followUser,updateProfilePic}}>
       {children}
     </UserContext.Provider>
   );
