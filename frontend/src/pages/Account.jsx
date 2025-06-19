@@ -9,11 +9,11 @@ import axios from "axios";
 import { Loading } from "../components/Loading";
 import { CiEdit } from "react-icons/ci";
 
-
 const Account = ({ user }) => {
   const navigate = useNavigate();
   const params = useParams();
-  const { logoutUser, updateProfilePic, updateProfileName } = UserData(); // ✅ Added updateProfileName
+
+  const { logoutUser, updateProfilePic, updateProfileName } = UserData();
   const { posts, reels } = PostData();
 
   const [User, setUser] = useState(user || null);
@@ -25,8 +25,6 @@ const Account = ({ user }) => {
   const [followersData, setFollowersData] = useState([]);
   const [followingsData, setFollowingsData] = useState([]);
   const [file, setFile] = useState("");
-  const [showInput, setShowInput] = useState(false);
-  const [name, setName] = useState(user?.name || "");
 
   const fetchUser = async () => {
     try {
@@ -58,7 +56,7 @@ const Account = ({ user }) => {
     const formdata = new FormData();
     formdata.append("file", file);
     updateProfilePic(user._id, formdata, setFile);
-    setFile(""); // ✅ Reset after upload
+    setFile("");
   };
 
   useEffect(() => {
@@ -85,8 +83,20 @@ const Account = ({ user }) => {
     if (index < myReels.length - 1) setIndex((prev) => prev + 1);
   };
 
+  const [showInput, setShowInput] = useState(false);
+  const [name, setName] = useState(user?.name || "");
+
   const UpdateName = () => {
     updateProfileName(user._id, name, setShowInput);
+
+    // ✅ Update UI instantly
+    setUser((prevUser) => ({
+      ...prevUser,
+      name: name,
+    }));
+
+    // Optional: Add toast
+    // toast.success("Name updated successfully!");
   };
 
   if (loading || !User) return <Loading />;
@@ -132,7 +142,6 @@ const Account = ({ user }) => {
 
           <div className="flex flex-col gap-2">
             {showInput ? (
-              <>
               <div className="flex justify-center items-center gap-2">
                 <input
                   className="custom-input"
@@ -143,14 +152,18 @@ const Account = ({ user }) => {
                   required
                 />
                 <button onClick={UpdateName}>Update</button>
-                <button className="bg-red-400 text-while p-2"  onClick={() => setShowInput(false)}>X</button>
+                <button
+                  className="bg-red-400 text-white p-2 rounded-full"
+                  onClick={() => setShowInput(false)}
+                >
+                  X
+                </button>
               </div>
-              </>
             ) : (
               <p className="text-gray-800 font-semibold">
                 {User.name}{" "}
                 <button onClick={() => setShowInput(true)} className="text-sm text-blue-500">
-                  Edit
+                  <CiEdit />
                 </button>
               </p>
             )}

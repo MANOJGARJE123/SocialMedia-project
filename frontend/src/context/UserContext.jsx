@@ -87,12 +87,23 @@ export const UserContextProvider = ({ children }) => {
     }
   }
 
+    async function updateProfileName(id, name, setShowInput) {
+    try {
+      const { data } = await axios.put("/api/user/" + id, { name });
+      toast.success(data.message);
+      fetchUser();
+      setShowInput(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{registerUser, loginUser, logoutUser, isAuth, setIsAuth, user, setUser, loading ,followUser,updateProfilePic}}>
+    <UserContext.Provider value={{registerUser, loginUser, logoutUser, isAuth, setIsAuth, user, setUser, loading ,followUser,updateProfilePic,updateProfileName}}>
       {children}
     </UserContext.Provider>
   );
