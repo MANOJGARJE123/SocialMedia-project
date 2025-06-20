@@ -27,28 +27,29 @@ app.get("/", (req, res) => {
     res.send("server is working");
 });
 
-app.get("/chats",isAuth, async(req,res)=>{
-    try{
-        const chats = await Chat.find({
-            users: req.user._id,
-        }).populate({
-            path: "users",
-            select:"name profilePic",
-        })
+app.get("/api/messages/chats", isAuth, async (req, res) => {
+  try {
+    const chats = await Chat.find({
+      users: req.user._id,
+    }).populate({
+      path: "users",
+      select: "name profilePic",
+    });
 
-        chats.forEach((e)=>{
-            e.users = e.users.filter(
-                (user) => user._id.toString() !== req.user._id.toString()
-            )
-        });
+    chats.forEach((e) => {
+      e.users = e.users.filter(
+        (user) => user._id.toString() !== req.user._id.toString()
+      );
+    });
 
-        res.send(chats)
-    }catch(error){
-        res.status(500).json({
-            message:error.message,
-        })
-    }
-})
+    res.json(chats);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+});
+
 
 app.get("/api/user/all", isAuth, async (req, res) => {
   try {

@@ -8,6 +8,7 @@ import Modal from "../components/Modal";
 import axios from "axios";
 import { Loading } from "../components/Loading";
 import { CiEdit } from "react-icons/ci";
+import toast from "react-hot-toast";
 
 const Account = ({ user }) => {
   const navigate = useNavigate();
@@ -98,8 +99,30 @@ const Account = ({ user }) => {
     // Optional: Add toast
     // toast.success("Name updated successfully!");
   };
+    
+  const [showUpdatePass, setShowUpdatePass] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState(""); 
+
 
   if (loading || !User) return <Loading />;
+
+ async function updatePassword(e) {
+    e.preventDefault();
+    try {
+      const { data } = await axios.post("/api/user/" + user._id, {
+        oldPassword,
+        newPassword,
+      });
+
+      toast.success(data.message);
+      setOldPassword("");
+      setNewPassword("");
+      setShowUpdatePass(false);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
 
   return (
     <>
@@ -131,7 +154,7 @@ const Account = ({ user }) => {
                 Choose File
               </label>
               <button
-                className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition disabled:opacity-50"
+                className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600 transition disabled:opacity-90"
                 onClick={changeImageHandler}
                 disabled={!file}
               >
@@ -188,7 +211,44 @@ const Account = ({ user }) => {
               Logout
             </button>
           </div>
+
         </div>
+        <button
+          onClick={() => setShowUpdatePass(!showUpdatePass)}
+          className="bg-blue-500 px-2 py-1 rounded-sm text-white"
+        >
+          {showUpdatePass ? "X" : "Update Password"}
+        </button>
+
+            {showUpdatePass && (
+              <form
+                onSubmit={updatePassword}
+                className="flex justify-center items-center flex-col bg-white p-2 rounded-sm gap-4"
+              >
+                <input
+                  type="password"
+                  className="custom-input"
+                  placeholder="Old Password"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  required
+                />
+                <input
+                  type="password"
+                  className="custom-input"
+                  placeholder="new Password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-500 px-2 py-1 rounded-sm text-white"
+                >
+                  Update Password
+                </button>
+              </form>
+            )}
 
         {/* Post/Reel Buttons */}
         <div className="controls flex justify-center items-center bg-white p-4 rounded-md gap-7">

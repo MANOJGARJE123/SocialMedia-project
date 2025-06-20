@@ -13,6 +13,8 @@ import UserAccount from "./pages/UserAccount";
 import NavigationBar from "./components/NavigationBar";
 import NotFound from "./components/NotFound";
 import { Loading } from "./components/Loading";
+import Search from "./pages/Search";
+import ChatPage from "./pages/ChatPage";
 
 const App = () => {
   const { loading, isAuth, user } = UserData();
@@ -37,6 +39,8 @@ const App = () => {
             <Route path="/login" element={!isAuth ? <Login /> : <Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
+            <Route path="/search" element={isAuth?<Search/>:<Login/>}></Route>
+            <Route path="/chat" element={isAuth?<ChatPage/>:<Login/>}></Route>
           </Routes>
 
           {/* Show bottom navbar only when authenticated */}

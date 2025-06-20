@@ -76,16 +76,17 @@ export const UserContextProvider = ({ children }) => {
     }
   }
 
-    async function updateProfilePic(id, formdata, setFile) {
-    try {
-      const { data } = await axios.put("/api/user/" + id, formdata);
-      toast.success(data.message);
-      fetchUser();
-      setFile(null);
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+async function updateProfilePic(id, formdata, setFile) {
+  try {
+    const { data } = await axios.put("/api/user/" + id, formdata);
+    toast.success(data.message);
+    setFile(null);
+    return data.updatedUser; // ✅ return updated user
+  } catch (error) {
+    toast.error(error.response.data.message);
+    return null;
   }
+}
 
     async function updateProfileName(id, name, setShowInput) {
     try {
