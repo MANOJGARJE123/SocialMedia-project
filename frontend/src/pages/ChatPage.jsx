@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { ChatData } from "../context/ChatContext"; // Global chat state (chats, selectedChat, etc.)
-import { UserData } from "../context/UserContext"; // Global user state (user info, online users)
+import { ChatData } from "../context/ChatContext";
+import { UserData } from "../context/UserContext";
 import axios from "axios";
 import { FaSearch } from "react-icons/fa";
-import Chat from "../components/chat/Chat"; // Single chat UI card
-import MessageContainer from "../components/chat/MessageContainer"; // Actual message box (chat area)
+import Chat from "../components/chat/Chat";
+import MessageContainer from "../components/chat/MessageContainer";
+import { SocketData } from "../context/SocketContext";
 
 const ChatPage = () => {
-  // Context states
   const { createChat, selectedChat, setSelectedChat, chats, setChats } = ChatData();
-  const { user, onlineUsers = [] } = UserData(); // Get logged-in user and list of online users
+  const { user } = UserData();
+  const { onlineUsers, socket } = SocketData();
 
-  // Local states
-  const [users, setUsers] = useState([]);        // List of searched users
-  const [query, setQuery] = useState("");        // Search query string
-  const [search, setSearch] = useState(false);   // Toggle for showing search input
+  const [users, setUsers] = useState([]);
+  const [query, setQuery] = useState("");
+  const [search, setSearch] = useState(false);
 
-  // 🔍 Fetch users based on search input
+  // 🔍 Fetch users based on search
   const fetchAllUsers = async () => {
     try {
       const { data } = await axios.get("/api/user/all?search=" + query, {
         withCredentials: true,
       });
-      setUsers(data); // Set the users to display in search result
+      setUsers(data);
     } catch (error) {
       console.log("Error fetching users:", error);
     }
@@ -34,36 +34,32 @@ const ChatPage = () => {
       const { data } = await axios.get("/api/messages/chats", {
         withCredentials: true,
       });
-      setChats(data); // Set all fetched chats into context
+      setChats(data);
     } catch (error) {
       console.log("Error fetching chats:", error);
     }
   };
 
-  // 🕵️‍♂️ Trigger search API on every query change
   useEffect(() => {
     fetchAllUsers();
   }, [query]);
 
-  // 🚀 Load chats on first page load
   useEffect(() => {
     getAllChats();
   }, []);
 
-  // ➕ Create a new chat when user is clicked from search
   const createNewChat = async (id) => {
-    await createChat(id); // API to create chat
-    setSearch(false);     // Close search panel
-    getAllChats();        // Refresh chat list
+    await createChat(id);
+    setSearch(false);
+    getAllChats();
   };
 
   return (
     <div className="w-full md:w-[750px] md:p-4">
       <div className="flex gap-4 mx-auto">
-        {/* Left Panel - User Search + Chat List */}
+        {/* Left Panel */}
         <div className="w-[30%]">
           <div className="top">
-            {/* 🔍 Toggle Search Button */}
             <button
               className="bg-blue-500 text-white px-3 py-1 rounded-full"
               onClick={() => setSearch(!search)}
@@ -73,7 +69,6 @@ const ChatPage = () => {
 
             {search ? (
               <>
-                {/* 🔎 Search Input */}
                 <input
                   type="text"
                   className="custom-input w-full border border-gray-300 mt-2 px-2 py-1 rounded"
@@ -82,7 +77,6 @@ const ChatPage = () => {
                   onChange={(e) => setQuery(e.target.value)}
                 />
 
-                {/* 👤 Show searched users */}
                 <div className="users mt-2">
                   {users.length > 0 ? (
                     users.map((e) => (
@@ -108,14 +102,10 @@ const ChatPage = () => {
                 </div>
               </>
             ) : (
-              // 💬 Show chat list (not search)
               <div className="flex flex-col justify-center items-center mt-2">
                 {chats.map((chat) => {
-                  // Get the other person in the chat
                   const otherUser = chat.users.find((u) => u._id !== user._id);
-                  // ✅ Check if that person is online
-                  const isOnline = otherUser && onlineUsers.includes(otherUser._id);
-
+                  const isOnline = onlineUsers.includes(otherUser?._id);
                   return (
                     <Chat
                       key={chat._id}
@@ -130,14 +120,12 @@ const ChatPage = () => {
           </div>
         </div>
 
-        {/* Right Panel - Message Container */}
+        {/* Right Panel */}
         {selectedChat === null ? (
-          // 👋 Welcome message if no chat is selected
           <div className="w-[70%] mx-20 mt-40 text-2xl">
             Hello 👋 {user.name}, select a chat to start conversation
           </div>
         ) : (
-          // 💬 Show selected chat messages
           <div className="w-[70%]">
             <MessageContainer selectedChat={selectedChat} setChats={setChats} />
           </div>

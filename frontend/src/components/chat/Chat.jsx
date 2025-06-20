@@ -14,7 +14,7 @@ const Chat = ({ chat, setSelectedChat, isOnline }) => {
         >
           <div className="flex justify-center items-center gap-2">
             {isOnline && (
-              <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm border border-white"></div>
+              <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm border border-white">.</div>
             )}
 
             <img

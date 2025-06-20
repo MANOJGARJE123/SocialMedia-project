@@ -5,6 +5,7 @@ import { UserContextProvider } from "./context/UserContext";
 import { PostContextProvider } from "./context/PostContext";
 import { ChatContextProvider } from "./context/ChatContext.jsx";
 import "./index.css";
+import { SocketContextProvider } from "./context/SocketContext.jsx";
 
 // ✅ Corrected: Removed invalid JSX-style comments
 createRoot(document.getElementById("root")).render(
@@ -12,7 +13,9 @@ createRoot(document.getElementById("root")).render(
     <UserContextProvider>
       <PostContextProvider>
           <ChatContextProvider>
-               <App />
+              <SocketContextProvider>
+                 <App />
+              </SocketContextProvider>
           </ChatContextProvider>
       </PostContextProvider>
     </UserContextProvider>

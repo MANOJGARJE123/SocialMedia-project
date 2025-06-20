@@ -15,12 +15,23 @@ export const newPost = TryCatch(async(req, res)=>{
     let option
 
     const type = req.query.type
-    if(type === "reel"){
-        option = {
-            resource_type:"video"
-        };
-    }else{
-        option = {}
+
+    if (type === "reel") {
+      option = {
+        resource_type: "video",
+        access_mode: "public",
+      };
+    } else if (file.mimetype === "application/pdf") {
+      option = {
+        resource_type: "raw",            // ⬅️ Tells Cloudinary this is a raw file (PDF)
+        access_mode: "public",           // ⬅️ Makes it publicly accessible
+        type: "upload",                  // ⬅️ Must be explicitly set for raw files
+      };
+    } else {
+      option = {
+        resource_type: "auto",
+        access_mode: "public",
+      };
     }
 
     const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content, option);

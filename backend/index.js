@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { Chat } from './models/ChatModel.js';
 import { isAuth } from './middlewares/isAuth.js';
 import { User } from './models/userModel.js';
+import { app, server } from "./Socket/socket.js";
 
 dotenv.config();
 cloudinary.v2.config({
@@ -13,8 +14,6 @@ cloudinary.v2.config({
     api_key: process.env.Cloudinary_Api,            
     api_secret: process.env.Cloudinary_Secret       
 });
-
-const app = express();
 
 
 //using middleware
@@ -87,7 +86,7 @@ app.use("/api/post", postRoutes);
 app.use("/api/messages",messageRoutes)
 
 //using routes
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`server is running on http://localhost:${port}`);
     connectDb()
 });

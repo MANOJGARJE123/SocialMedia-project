@@ -15,6 +15,7 @@ import NotFound from "./components/NotFound";
 import { Loading } from "./components/Loading";
 import Search from "./pages/Search";
 import ChatPage from "./pages/ChatPage";
+import { SocketData } from "./context/SocketContext";
 
 const App = () => {
   const { loading, isAuth, user } = UserData();
