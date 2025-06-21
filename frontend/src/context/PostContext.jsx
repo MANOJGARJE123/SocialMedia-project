@@ -12,17 +12,19 @@ export const PostContextProvider = ({ children }) => {
   const [addLoading, setAddLoading] = useState(false);
 
   // ✅ Fetch all posts and reels
-  async function fetchPosts() {
-    try {
-      const { data } = await axios.get("/api/post/all");
-      setPosts(data.posts);
-      setReels(data.reels);
-    } catch (error) {
-      console.error("Fetch posts error:", error);
-    } finally {
-      setLoading(false);
-    }
+async function fetchPosts() {
+  setLoading(true); // ✅ Add this line
+  try {
+    const { data } = await axios.get("/api/post/all");
+    setPosts(data.posts);
+    setReels(data.reels);
+  } catch (error) {
+    console.error("Fetch posts error:", error);
+  } finally {
+    setLoading(false);
   }
+}
+
 
   // ✅ Add a new post
   async function addPost(formdata, setFile, setFilePrev, setCaption, type) {
