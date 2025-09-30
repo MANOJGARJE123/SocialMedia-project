@@ -89,25 +89,19 @@ const Account = ({ user }) => {
 
   const UpdateName = () => {
     updateProfileName(user._id, name, setShowInput);
-
-    // ✅ Update UI instantly
     setUser((prevUser) => ({
       ...prevUser,
       name: name,
     }));
-
-    // Optional: Add toast
-    // toast.success("Name updated successfully!");
   };
-    
+
   const [showUpdatePass, setShowUpdatePass] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState(""); 
-
+  const [newPassword, setNewPassword] = useState("");
 
   if (loading || !User) return <Loading />;
 
- async function updatePassword(e) {
+  async function updatePassword(e) {
     e.preventDefault();
     try {
       const { data } = await axios.post("/api/user/" + user._id, {
@@ -129,7 +123,7 @@ const Account = ({ user }) => {
       {show && <Modal value={followersData} title="Followers" setShow={setShow} />}
       {show1 && <Modal value={followingsData} title="Followings" setShow={setShow1} />}
 
-      <div className="bg-gray-100 min-h-screen flex flex-col gap-4 items-center justify-center pt-3 pb-14">
+      <div className="bg-gradient-to-br from-blue-100 via-white to-purple-100 min-h-screen flex flex-col gap-4 items-center justify-center pt-3 pb-14">
         {/* User Info */}
         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md">
           <div className="image flex flex-col justify-between mb-4 gap-4">
@@ -211,8 +205,8 @@ const Account = ({ user }) => {
               Logout
             </button>
           </div>
-
         </div>
+
         <button
           onClick={() => setShowUpdatePass(!showUpdatePass)}
           className="bg-blue-500 px-2 py-1 rounded-sm text-white"
@@ -220,35 +214,35 @@ const Account = ({ user }) => {
           {showUpdatePass ? "X" : "Update Password"}
         </button>
 
-            {showUpdatePass && (
-              <form
-                onSubmit={updatePassword}
-                className="flex justify-center items-center flex-col bg-white p-2 rounded-sm gap-4"
-              >
-                <input
-                  type="password"
-                  className="custom-input"
-                  placeholder="Old Password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  required
-                />
-                <input
-                  type="password"
-                  className="custom-input"
-                  placeholder="new Password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-500 px-2 py-1 rounded-sm text-white"
-                >
-                  Update Password
-                </button>
-              </form>
-            )}
+        {showUpdatePass && (
+          <form
+            onSubmit={updatePassword}
+            className="flex justify-center items-center flex-col bg-white p-2 rounded-sm gap-4"
+          >
+            <input
+              type="password"
+              className="custom-input"
+              placeholder="Old Password"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              className="custom-input"
+              placeholder="new Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 px-2 py-1 rounded-sm text-white"
+            >
+              Update Password
+            </button>
+          </form>
+        )}
 
         {/* Post/Reel Buttons */}
         <div className="controls flex justify-center items-center bg-white p-4 rounded-md gap-7">

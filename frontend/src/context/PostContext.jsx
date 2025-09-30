@@ -11,9 +11,9 @@ export const PostContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [addLoading, setAddLoading] = useState(false);
 
-  // ✅ Fetch all posts and reels
+  // Fetch all posts and reels
 async function fetchPosts() {
-  setLoading(true); // ✅ Add this line
+  setLoading(true); // Add this line
   try {
     const { data } = await axios.get("/api/post/all");
     setPosts(data.posts);
@@ -26,7 +26,7 @@ async function fetchPosts() {
 }
 
 
-  // ✅ Add a new post
+  // Add a new post
   async function addPost(formdata, setFile, setFilePrev, setCaption, type) {
     setAddLoading(true);
     try {
@@ -43,7 +43,7 @@ async function fetchPosts() {
     }
   }
 
-  // ✅ Like a post
+  // Like a post
   async function likePost(id) {
     try {
       const { data } = await axios.post(`/api/post/like/${id}`);
@@ -54,7 +54,7 @@ async function fetchPosts() {
     }
   }
 
-  // ✅ Add a comment
+  // Add a comment
   async function addComment(id, comment, setComment, setShow) {
     try {
       const { data } = await axios.post(`/api/post/comment/${id}`, { comment });
@@ -67,7 +67,7 @@ async function fetchPosts() {
     }
   }
 
-  // ✅ Delete a comment (corrected route)
+  // Delete a comment (corrected route)
   async function deleteComment(id, commentId) {
     try {
       const { data } = await axios.delete(
@@ -81,7 +81,7 @@ async function fetchPosts() {
     }
   }
 
-  // ✅ Delete a post
+  // Delete a post
   async function deletePost(id) {
     setLoading(true);
     try {
