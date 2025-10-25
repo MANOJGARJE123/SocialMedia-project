@@ -28,7 +28,7 @@
     followings:[
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"User",
+        ref:"User",  //a User can reference other Users → this is self-referencing.
         }
     ],
     profilePic:{ //both id and url are send by cloudinary

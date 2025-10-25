@@ -124,7 +124,6 @@ const Account = ({ user }) => {
       {show1 && <Modal value={followingsData} title="Followings" setShow={setShow1} />}
 
       <div className="bg-gradient-to-br from-blue-100 via-white to-purple-100 min-h-screen flex flex-col gap-4 items-center justify-center pt-3 pb-14">
-        {/* User Info */}
         <div className="bg-white flex justify-between gap-4 p-8 rounded-lg shadow-md max-w-md">
           <div className="image flex flex-col justify-between mb-4 gap-4">
             <img
@@ -244,7 +243,6 @@ const Account = ({ user }) => {
           </form>
         )}
 
-        {/* Post/Reel Buttons */}
         <div className="controls flex justify-center items-center bg-white p-4 rounded-md gap-7">
           <button
             onClick={() => setType("post")}
@@ -260,7 +258,6 @@ const Account = ({ user }) => {
           </button>
         </div>
 
-        {/* Posts */}
         {type === "post" &&
           (myPosts.length > 0 ? (
             myPosts.map((post) => (
@@ -270,7 +267,6 @@ const Account = ({ user }) => {
             <p>No post yet</p>
           ))}
 
-        {/* Reels */}
         {type === "reel" &&
           (myReels.length > 0 ? (
             <div className="flex justify-center items-center gap-4">

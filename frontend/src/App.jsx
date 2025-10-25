@@ -4,8 +4,8 @@ import { Toaster } from "react-hot-toast";
 import { UserData } from "./context/UserContext";
 
 // Pages & Components
-import Home from "./pages/home";
-import Login from "./pages/login";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Account from "./pages/Account";
 import Reels from "./pages/Reels";

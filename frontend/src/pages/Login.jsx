@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { UserData } from '../context/UserContext'; // adjust path if needed
+import { UserData } from '../context/UserContext';
 import { PostData } from '../context/PostContext';
 
 const Login = () => {
@@ -9,19 +9,17 @@ const Login = () => {
   const navigate = useNavigate();
 
   const { loginUser , loading} = UserData();
-  const {fetchPosts} = PostData()
+  const {fetchPosts} = PostData();
 
   const submitHandler = (e) => {
-  e.preventDefault();
-  console.log("🔑 submitHandler fired:", { email, password });
-  loginUser(email, password, navigate,fetchPosts);
-};
+    e.preventDefault();
+    console.log("🔑 submitHandler fired:", { email, password });
+    loginUser(email, password, navigate, fetchPosts);
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-[90%] md:w-[60%] flex shadow-lg rounded-2xl border border-gray-300 bg-white overflow-hidden">
-        
-        {/* Left side: Form */}
         <div className="w-full md:w-2/3 p-6">
           <div className="text-center mb-6">
             <h1 className="font-semibold text-2xl md:text-3xl text-gray-700">
@@ -57,7 +55,6 @@ const Login = () => {
           </form>
         </div>
 
-        {/* Right side: Info panel */}
         <div className="hidden md:flex w-1/3 bg-gradient-to-l from-blue-400 to-yellow-400 text-white flex-col justify-center items-center p-6 space-y-4">
           <h1 className="text-3xl font-bold">Don't have an Account?</h1>
           <p className="text-sm">Register to Social Media</p>

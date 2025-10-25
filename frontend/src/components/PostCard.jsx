@@ -71,7 +71,6 @@ const PostCard = ({ type, value }) => {
 
   return (
     <div className="bg-gray-100 flex items-center justify-center pt-3 pb-14">
-      {/* Modal */}
       <SimpleModal isOpen={showModal} onClose={() => setShowModal(false)}>
         <div className="flex flex-col items-center justify-center gap-3">
           <button onClick={editHandler} className="bg-blue-400 text-black py-1 px-3 rounded-md">
@@ -87,9 +86,7 @@ const PostCard = ({ type, value }) => {
         </div>
       </SimpleModal>
 
-      {/* Post Box */}
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        {/* Header */}
         <div className="flex items-center justify-between mb-4">
           {value.owner ? (
             <Link to={`/user/${value.owner._id}`} className="flex items-center space-x-2">
@@ -113,7 +110,6 @@ const PostCard = ({ type, value }) => {
             </div>
           )}
 
-          {/* Dots menu */}
           {user?._id && value?.owner?._id === user._id && (
             <div className="text-gray-500 cursor-pointer">
               <button
@@ -126,7 +122,6 @@ const PostCard = ({ type, value }) => {
           )}
         </div>
 
-        {/* Caption */}
         <div className="mb-4">
           {showInput ? (
             <>
@@ -157,7 +152,6 @@ const PostCard = ({ type, value }) => {
           )}
         </div>
 
-        {/* Media */}
         <div className="mb-4">
           {type === "post" ? (
             <img
@@ -171,7 +165,6 @@ const PostCard = ({ type, value }) => {
           )}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center justify-between text-gray-500">
           <div className="flex items-center space-x-2">
             <span onClick={handleLike} className="text-2xl cursor-pointer">
@@ -190,7 +183,6 @@ const PostCard = ({ type, value }) => {
           </button>
         </div>
 
-        {/* Comment Input */}
         {show && (
           <form className="flex gap-3 mt-2" onSubmit={handleCommentSubmit}>
             <input
@@ -206,15 +198,13 @@ const PostCard = ({ type, value }) => {
           </form>
         )}
 
-        {/* Comments */}
         <hr className="my-2" />
         <p className="text-gray-800 font-semibold">Comments</p>
         <hr className="my-2" />
         <div className="mt-4">
           <div className="comments max-h-[200px] overflow-y-auto">
             {value.comments && value.comments?.length > 0 ? (
-              value.comments.map((comment) => <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id}/>)
-
+              value.comments.map((comment) => <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />)
             ) : (
               <p>No Comments</p>
             )}
@@ -227,7 +217,6 @@ const PostCard = ({ type, value }) => {
 
 export default PostCard;
 
-// ✅ Subcomponent: Comment
 export const Comment = ({ value,user,owner,id }) => {
   const { deleteComment } = PostData();
   
@@ -261,11 +250,42 @@ export const Comment = ({ value,user,owner,id }) => {
         </>
       )}
       
-       {owner === user._id && (
-            <button onClick={deleteCommentHandler} className="text-red-500">
-              <MdDelete />
-            </button>
-        )}
+      {owner === user._id && (
+        <button onClick={deleteCommentHandler} className="text-red-500">
+          <MdDelete />
+        </button>
+      )}
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// PostCard is a reusable component to display posts or reels. 
+// It shows owner info, media, caption, likes, and comments.
+//  Users can like posts, add comments, and delete their own posts. 
+// The post owner can also edit the caption. The component uses local state for likes, 
+// comments, modal visibility, and caption editing. It also integrates with PostContext for
+//  performing actions like liking, deleting, and fetching posts.

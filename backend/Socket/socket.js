@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import http from "http";
+import http from "http"; //Node’s built-in HTTP module, needed to integrate Socket.IO with Express.
 import express from "express";
 
 const app = express();
@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: {
+  cors: {                                        //io → Socket.IO server instance.
     origin: "*",
     methods: ["GET", "POST"],
   },
@@ -18,12 +18,12 @@ export const getReciverSocketId = (reciverId) => {
 };
 
 
-const userSocketMap = {};
+const userSocketMap = {}; //keeps track of online users and their socket IDs.
 
-io.on("connection", (socket) => {
+io.on("connection", (socket) => {  
     console.log("User Connected", socket.id);
 
-    const userId = socket.handshake.query.userId;
+    const userId = socket.handshake.query.userId;  //gets the user ID sent by the frontend when connecting.
 
     if (userId != "undefined") userSocketMap[userId] = socket.id;
 

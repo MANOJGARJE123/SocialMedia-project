@@ -4,7 +4,7 @@ import PostCard from "../components/PostCard";
 import { PostData } from "../context/PostContext";
 
 const Home = () => {
-  const { posts, loading } = PostData(); // make sure loading is exposed in context
+  const { posts, loading } = PostData(); //Accesses all posts and a loading state from the PostContext.
 
   return (
     <div>

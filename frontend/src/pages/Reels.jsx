@@ -10,17 +10,11 @@ const Reels = () => {
   const [index, setIndex] = useState(0);
 
   const prevReel = () => {
-    if (index === 0) {
-      console.log("null");
-      return null;
-    }
+    if (index === 0) return null;
     setIndex(index - 1);
   };
   const nextReel = () => {
-    if (index === reels.length - 1) {
-      console.log("null");
-      return null;
-    }
+    if (index === reels.length - 1) return null;
     setIndex(index + 1);
   };
   return (
@@ -41,9 +35,7 @@ const Reels = () => {
               <p>No reels yet</p>
             )}
             <div className="button flex flex-col justify-center items-center gap-6">
-              {index === 0 ? (
-                ""
-              ) : (
+              {index !== 0 && (
                 <button
                   className="bg-gray-500 text-white py-5 px-5 rounded-full"
                   onClick={prevReel}
@@ -51,9 +43,7 @@ const Reels = () => {
                   <FaArrowUp />
                 </button>
               )}
-              {index === reels.length - 1 ? (
-                ""
-              ) : (
+              {index !== reels.length - 1 && (
                 <button
                   className="bg-gray-500 text-white py-5 px-5 rounded-full"
                   onClick={nextReel}

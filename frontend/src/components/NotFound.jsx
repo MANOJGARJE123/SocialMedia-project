@@ -1,20 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+//This is a 404 page — when user navigate to wrong route then it goes to home page
+
 const NotFound = () => {
   const navigate = useNavigate();
-
-    const changeFileHandler = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onloadend = () => {
-      setFilePrev(reader.result);
-      setFile(file);
-    };
-  };
   
   return (
     <div className="flex items-center justify-center h-screen">

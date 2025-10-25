@@ -9,8 +9,11 @@ import {
 } from "react-icons/io5";
 import { RiAccountCircleFill, RiAccountCircleLine } from "react-icons/ri";
 
+//It’s a bottom navigation bar that stays fixed at the bottom of the screen.
+
 const NavigationBar = () => {
-  const [tab, setTab] = useState(window.location.pathname);
+  const [tab, setTab] = useState(window.location.pathname); //tab store current active route and set tabupdate active tab 
+                                                             // when you  //click current URL (window.location.pathname).
   return (
     <div className="fixed bottom-0 w-full bg-white py-3">
       <div className="flex justify-around">

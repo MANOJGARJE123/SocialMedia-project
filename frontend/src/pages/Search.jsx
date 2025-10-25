@@ -10,7 +10,7 @@
     async function fetchUsers() {
       setLoading(true);
       try {
-        const { data } = await axios.get("/api/user/all?search=" + search);
+        const { data } = await axios.get("/api/user/all?search=" + search); //This is the backend route that returns all users.
 
         setUsers(data);
         setLoading(false);
@@ -29,7 +29,7 @@
               style={{ border: "gray solid 1px" }}
               placeholder="Enter Name"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)} //e is the event object representing this change.
             />
             <button
               onClick={fetchUsers}

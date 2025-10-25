@@ -13,13 +13,12 @@ const ChatPage = () => {
   const { onlineUsers, socket } = SocketData();
 
   const [users, setUsers] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("");//search text type
   const [search, setSearch] = useState(false);
 
-  // 🔍 Fetch users based on search
   const fetchAllUsers = async () => {
     try {
-      const { data } = await axios.get("/api/user/all?search=" + query, {
+      const { data } = await axios.get("/api/user/all?search=" + query, { //fetch the search user 
         withCredentials: true,
       });
       setUsers(data);
@@ -28,7 +27,6 @@ const ChatPage = () => {
     }
   };
 
-  // 📥 Fetch all chats of the logged-in user
   const getAllChats = async () => {
     try {
       const { data } = await axios.get("/api/messages/chats", {
@@ -57,7 +55,6 @@ const ChatPage = () => {
   return (
     <div className="w-full md:w-[750px] md:p-4">
       <div className="flex gap-4 mx-auto">
-        {/* Left Panel */}
         <div className="w-[30%]">
           <div className="top">
             <button
@@ -120,7 +117,6 @@ const ChatPage = () => {
           </div>
         </div>
 
-        {/* Right Panel */}
         {selectedChat === null ? (
           <div className="w-[70%] mx-20 mt-40 text-2xl">
             Hello 👋 {user.name}, select a chat to start conversation

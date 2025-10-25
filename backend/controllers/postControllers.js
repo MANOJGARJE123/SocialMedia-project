@@ -1,9 +1,9 @@
-import TryCatch  from "../utils/Trycatch.js"
+import TryCatch  from "../utils/TryCatch.js"
 import { Post } from"../models/postModel.js"
 import getDataUrl from "../utils/urlGenrator.js"
 import cloudinary from "cloudinary"
 
-
+//Handles creation of new posts or reels.
 export const newPost = TryCatch(async(req, res)=>{
     const{caption} = req.body;
 
@@ -16,6 +16,7 @@ export const newPost = TryCatch(async(req, res)=>{
 
     const type = req.query.type
 
+    //this is for cloudinary who needs different options for videos, PDFs, and images.
     if (type === "reel") {
       option = {
         resource_type: "video",
@@ -23,9 +24,9 @@ export const newPost = TryCatch(async(req, res)=>{
       };
     } else if (file.mimetype === "application/pdf") {
       option = {
-        resource_type: "raw",            // ⬅️ Tells Cloudinary this is a raw file (PDF)
-        access_mode: "public",           // ⬅️ Makes it publicly accessible
-        type: "upload",                  // ⬅️ Must be explicitly set for raw files
+        resource_type: "raw",            // Tells Cloudinary this is a raw file (PDF)
+        access_mode: "public",           // Makes it publicly accessible
+        type: "upload",                  // Must be explicitly set for raw files
       };
     } else {
       option = {
@@ -35,11 +36,12 @@ export const newPost = TryCatch(async(req, res)=>{
     }
 
     const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content, option);
+    
 
     const post = await Post.create({
         caption,
         post: {
-          id: myCloud.public_id,
+          id: myCloud.public_id, 
           url: myCloud.secure_url,
         },
         
@@ -59,7 +61,7 @@ export const deletePost = TryCatch(async (req, res) => {
       return res.status(404).json({ message: "No post with this id" });
     }
 
-    if (post.owner.toString() !== req.user._id.toString()) {
+    if (post.owner.toString() !== req.user._id.toString()) { 
       return res.status(403).json({ message: "Unauthorized" });
     }
   
@@ -73,10 +75,10 @@ export const deletePost = TryCatch(async (req, res) => {
   export const getAllPosts = TryCatch(async (req, res) => {
 
     const posts = await Post.find({ type: "post" })
-      .sort({ createdAt: -1 }) 
-      .populate("owner","-password")
+      .sort({ createdAt: -1 })  //Sorts by most recent first
+      .populate("owner","-password") 
       .populate({
-        path:"comments.user",
+        path:"comments.user",  
         select:"-password",
       })
     
@@ -112,7 +114,7 @@ export const likeUnlikePost = TryCatch(async(req,res) => {
       });
     }else{
       post.likes.push(req.user._id)
-
+      
       await post.save();
 
       res.json({
@@ -187,7 +189,6 @@ export const deleteComment = TryCatch(async (req, res) => {
 export const editCaption = TryCatch(async (req, res) => {
   const post = await Post.findById(req.params.id);
 
-  //  PROBLEM 1: Missing closing brace caused logic error
   if (!post) {
     return res.status(404).json({
       message: "No post with this id"
@@ -200,7 +201,7 @@ export const editCaption = TryCatch(async (req, res) => {
     });
   }
 
-  post.caption = req.body.caption;
+  post.caption = req.body.caption; //Get the new caption from the request
 
   await post.save();
 

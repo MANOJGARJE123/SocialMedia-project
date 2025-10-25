@@ -1,6 +1,6 @@
 import React from "react";
 
-const SimpleModal = ({ isOpen, onClose, children }) => {
+const SimpleModal = ({ isOpen, onClose, children }) => { 
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-30">
@@ -15,5 +15,20 @@ const SimpleModal = ({ isOpen, onClose, children }) => {
     </div>
   );
 };
-
 export default SimpleModal;
+
+
+
+
+
+
+
+
+
+
+
+
+
+//SimpleModal is a generic, reusable popup component that can show 
+// any content (buttons, text, forms) in a centered overlay with a dark background. 
+// It is used in your PostCard for options like Edit or Delete a post.

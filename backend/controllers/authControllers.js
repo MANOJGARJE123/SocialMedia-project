@@ -1,13 +1,12 @@
 import { User } from "../models/userModel.js";
-import TryCatch from "../utils/Trycatch.js";
+import TryCatch from "../utils/TryCatch.js";
 import generateToken from "../utils/generateToken.js";
 import getDataUrl from "../utils/urlGenrator.js";
 import bcrypt from 'bcrypt';
 import cloudinary from 'cloudinary'
 
 export const registerUser = TryCatch(async (req , res) =>{
-        console.log(req.body);  // Log form data (name, email, etc.)
-        console.log(req.file);  // Log file upload info
+    
         const{name, email, password, gender } = req.body;
 
         const file = req.file;
@@ -28,7 +27,7 @@ export const registerUser = TryCatch(async (req , res) =>{
             const fileUrl = getDataUrl(file);
 
             const hashPassword = await bcrypt.hash(password, 10);
-            const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content);
+            const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content); //The Cloudinary API function that uploads the file.
 
             user = await User.create({
                 name,
@@ -36,8 +35,8 @@ export const registerUser = TryCatch(async (req , res) =>{
                 password: hashPassword,
                 gender,
                 profilePic: {
-                    id: myCloud.public_id,
-                    url: myCloud.secure_url,
+                    id: myCloud.public_id,//Unique ID of the uploaded file on Cloudinary
+                    url: myCloud.secure_url,//Direct URL to access the uploaded file
                 },
             });
 

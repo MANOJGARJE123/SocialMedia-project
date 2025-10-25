@@ -1,4 +1,4 @@
-import TryCatch from "../utils/Trycatch.js";
+import TryCatch from "../utils/TryCatch.js";
 import { User} from "../models/userModel.js"
 import getDataUrl from "../utils/urlGenrator.js";
 import cloudinary from "cloudinary"

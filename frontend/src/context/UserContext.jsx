@@ -31,8 +31,8 @@ export const UserContextProvider = ({ children }) => {
     try {
       const { data } = await axios.post("/api/auth/login", { email, password });
       toast.success(data.message);
-      setIsAuth(true);
-      setUser(data.user);
+      setIsAuth(true); //user now authenticated
+      setUser(data.user); // store user info
       navigate("/");
       fetchPosts
     } catch (error) {
@@ -40,7 +40,7 @@ export const UserContextProvider = ({ children }) => {
     }
   }
 
-  async function fetchUser() {
+  async function fetchUser() { //currently loggedin user
     try {
       const { data } = await axios.get("/api/user/me");
       setUser(data);
@@ -81,14 +81,14 @@ async function updateProfilePic(id, formdata, setFile) {
     const { data } = await axios.put("/api/user/" + id, formdata);
     toast.success(data.message);
     setFile(null);
-    return data.updatedUser; // ✅ return updated user
+    return data.updatedUser; // return updated user
   } catch (error) {
     toast.error(error.response.data.message);
     return null;
   }
 }
 
-    async function updateProfileName(id, name, setShowInput) {
+  async function updateProfileName(id, name, setShowInput) {
     try {
       const { data } = await axios.put("/api/user/" + id, { name });
       toast.success(data.message);

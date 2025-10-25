@@ -2,9 +2,9 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { UserData } from "./UserContext";
 
-const EndPoint = "http://localhost:7000";
+const EndPoint = "http://localhost:7000"; 
 
-const SocketContext = createContext();
+const SocketContext = createContext(); 
 
 export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
@@ -14,14 +14,15 @@ export const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     if (!user) return;
 
-    const socket = io(EndPoint, {
+    const socket = io(EndPoint, {//Connects to the Socket.IO server at the URL stored in EndPoint
       query: {
-        userId: user._id,
+        userId: user._id, //Here, it sends the current user’s ID,
       },
     });
 
     setSocket(socket);
 
+    //server event listening
     socket.on("getOnlineUser", (users) => {
       setOnlineUsers(users);
     });
