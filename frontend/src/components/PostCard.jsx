@@ -12,7 +12,7 @@ import { PostData } from "../context/PostContext";
 import SimpleModal from "./SimpleModal";
 import { LoadingAnimation } from "./Loading";
 
-const PostCard = ({ type, value }) => {
+const PostCard = ({ type, value, layout = "grid" }) => {
   if (!value?.post?.url) return null;
 
   const [isLike, setIsLike] = useState(false);
@@ -69,16 +69,23 @@ const PostCard = ({ type, value }) => {
     }
   };
 
+  const cardWrapperClass = layout === "grid"
+    ? "rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all"
+    : "rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl";
+
+  const headerBg = "bg-gradient-to-r from-fuchsia-500/10 via-cyan-500/10 to-emerald-500/10";
+  const actionBtn = "hover:bg-white/10 rounded-full p-1";
+
   return (
-    <div className="bg-gray-100 flex items-center justify-center pt-3 pb-14">
+    <div className={layout === "grid" ? "pt-1" : "bg-transparent flex items-center justify-center pt-3 pb-14"}>
       <SimpleModal isOpen={showModal} onClose={() => setShowModal(false)}>
         <div className="flex flex-col items-center justify-center gap-3">
-          <button onClick={editHandler} className="bg-blue-400 text-black py-1 px-3 rounded-md">
+          <button onClick={editHandler} className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-1 px-3 rounded-md">
             Edit
           </button>
           <button
             onClick={deleteHandler}
-            className="bg-red-400 text-black py-1 px-3 rounded-md"
+            className="bg-gradient-to-r from-rose-500 to-red-500 text-white py-1 px-3 rounded-md"
             disabled={loading}
           >
             {loading ? <LoadingAnimation /> : "Delete"}
@@ -86,8 +93,8 @@ const PostCard = ({ type, value }) => {
         </div>
       </SimpleModal>
 
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        <div className="flex items-center justify-between mb-4">
+      <div className={`${cardWrapperClass} ${layout === "grid" ? "" : "max-w-2xl w-full"}`}>
+        <div className={`flex items-center justify-between px-5 py-4 ${headerBg}`}>
           {value.owner ? (
             <Link to={`/user/${value.owner._id}`} className="flex items-center space-x-2">
               <img
@@ -96,25 +103,25 @@ const PostCard = ({ type, value }) => {
                 className="w-8 h-8 rounded-full"
               />
               <div>
-                <p className="text-gray-800 font-semibold">{value.owner?.name}</p>
-                <p className="text-gray-500 text-sm">{formatDate}</p>
+                <p className="text-white font-semibold">{value.owner?.name}</p>
+                <p className="text-white/70 text-sm">{formatDate}</p>
               </div>
             </Link>
           ) : (
             <div className="flex items-center space-x-2">
               <img src="/default-avatar.png" alt="profile" className="w-8 h-8 rounded-full" />
               <div>
-                <p className="text-gray-800 font-semibold">Deleted User</p>
-                <p className="text-gray-500 text-sm">{formatDate}</p>
+                <p className="text-white font-semibold">Deleted User</p>
+                <p className="text-white/70 text-sm">{formatDate}</p>
               </div>
             </div>
           )}
 
           {user?._id && value?.owner?._id === user._id && (
-            <div className="text-gray-500 cursor-pointer">
+            <div className="text-white/80 cursor-pointer">
               <button
                 onClick={() => setShowModal(true)}
-                className="hover:bg-gray-50 rounded-full p-1 text-2xl"
+                className={`${actionBtn} text-2xl`}
               >
                 <BsThreeDotsVertical />
               </button>
@@ -122,7 +129,7 @@ const PostCard = ({ type, value }) => {
           )}
         </div>
 
-        <div className="mb-4">
+        <div className="px-5 pt-4">
           {showInput ? (
             <>
               <input
@@ -135,47 +142,47 @@ const PostCard = ({ type, value }) => {
               />
               <button
                 onClick={updateCaption}
-                className="text-sm bg-blue-500 text-white px-1 py-1 rounded-md"
+                className="text-sm bg-gradient-to-r from-indigo-500 to-sky-400 text-white px-2 py-1 rounded-md ml-2"
                 disabled={captionLoading}
               >
                 {captionLoading ? <LoadingAnimation /> : "Update Caption"}
               </button>
               <button
                 onClick={() => setShowInput(false)}
-                className="text-sm bg-red-500 text-white px-1 py-1 rounded-md"
+                className="text-sm bg-gradient-to-r from-rose-500 to-red-500 text-white px-2 py-1 rounded-md ml-2"
               >
                 X
               </button>
             </>
           ) : (
-            <p className="text-gray-800">{value.caption}</p>
+            <p className="text-white px-1">{value.caption}</p>
           )}
         </div>
 
-        <div className="mb-4">
+        <div className="mt-2">
           {type === "post" ? (
             <img
               src={value.post?.url}
               alt="post"
-              className="object-cover rounded-md"
+              className={`object-cover ${layout === "grid" ? "w-full h-72" : "w-full"}`}
               onError={(e) => (e.target.src = "/default-post.png")}
             />
           ) : (
-            <video src={value.post?.url} className="object-cover rounded-md" autoPlay controls />
+            <video src={value.post?.url} className={`object-cover ${layout === "grid" ? "w-full h-72" : "w-full"}`} autoPlay controls />
           )}
         </div>
 
-        <div className="flex items-center justify-between text-gray-500">
+        <div className="flex items-center justify-between text-white/80 px-5 py-4">
           <div className="flex items-center space-x-2">
             <span onClick={handleLike} className="text-2xl cursor-pointer">
-              {isLike ? <IoHeartSharp className="text-red-500" /> : <IoHeartOutline />}
+              {isLike ? <IoHeartSharp className="text-rose-500" /> : <IoHeartOutline />}
             </span>
-            <button className="hover:bg-gray-50 rounded-full p-1">
+            <button className={actionBtn}>
               {value.likes?.length || 0} likes
             </button>
           </div>
           <button
-            className="flex items-center gap-2 px-2 hover:bg-gray-50 rounded-full p-1"
+            className={`flex items-center gap-2 px-3 ${actionBtn}`}
             onClick={() => setShow(!show)}
           >
             <BsChatFill />
@@ -184,30 +191,34 @@ const PostCard = ({ type, value }) => {
         </div>
 
         {show && (
-          <form className="flex gap-3 mt-2" onSubmit={handleCommentSubmit}>
-            <input
-              type="text"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="custom-input"
-              placeholder="Enter comment"
-            />
-            <button className="bg-gray-100 rounded-lg px-5 py-2" type="submit">
-              Add
-            </button>
-          </form>
+          <div className="px-5 pb-5">
+            <form className="flex gap-3" onSubmit={handleCommentSubmit}>
+              <input
+                type="text"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="custom-input flex-1"
+                placeholder="Enter comment"
+              />
+              <button className="bg-gradient-to-r from-cyan-400 to-emerald-400 text-white rounded-lg px-5 py-2" type="submit">
+                Add
+              </button>
+            </form>
+          </div>
         )}
 
-        <hr className="my-2" />
-        <p className="text-gray-800 font-semibold">Comments</p>
-        <hr className="my-2" />
-        <div className="mt-4">
-          <div className="comments max-h-[200px] overflow-y-auto">
-            {value.comments && value.comments?.length > 0 ? (
-              value.comments.map((comment) => <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />)
-            ) : (
-              <p>No Comments</p>
-            )}
+        <div className="px-5 pb-6">
+          <hr className="my-2 border-white/10" />
+          <p className="text-white font-semibold">Comments</p>
+          <hr className="my-2 border-white/10" />
+          <div className="mt-4">
+            <div className="comments max-h-[200px] overflow-y-auto">
+              {value.comments && value.comments?.length > 0 ? (
+                value.comments.map((comment) => <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />)
+              ) : (
+                <p className="text-white/70">No Comments</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

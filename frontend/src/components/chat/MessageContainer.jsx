@@ -71,37 +71,46 @@ const MessageContainer = ({ selectedChat, setChats }) => {
   }, [selectedChat]);
 
   return (
-    <div className="p-4 bg-white h-[500px] overflow-y-auto rounded shadow">
+    <div className="h-full rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4 border-b pb-2">
+      <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-fuchsia-500/20 border-b border-white/10">
         <img
-          src={selectedChat.users[0].profilePic?.url}
+          src={selectedChat.users[0].profilePic?.url || "/default-avatar.png"}
           alt="Profile"
-          className="w-10 h-10 rounded-full"
+          className="w-12 h-12 rounded-full border-2 border-white/20"
         />
-        <h2 className="text-lg font-semibold">{selectedChat.users[0].name}</h2>
+        <h2 className="text-white text-lg font-semibold">{selectedChat.users[0].name}</h2>
       </div>
 
       {/* Loading spinner or Messages */}
       {loading ? (
-        <LoadingAnimation />
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingAnimation />
+        </div>
       ) : (
         <>
-        <div ref={messageContainerRef}   className="flex flex-col gap-4 my-4 h-[400px] overflow-y-auto border border-gray-300 bg-gray-100 p-3">
-           {messages &&
+        <div ref={messageContainerRef} className="flex-1 flex flex-col gap-4 p-4 overflow-y-auto bg-gradient-to-b from-slate-900/50 to-slate-800/50">
+           {messages && messages.length > 0 ? (
                 messages.map((e, index) => (
                     <Message
-                    key={e._id || index} // ✅ Add unique key here
+                    key={e._id || index}
                     message={e.text}
                     ownMessage={e.sender === user._id}
                     />
-                ))}
+                ))
+           ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-white/60">No messages yet. Start the conversation!</p>
+            </div>
+           )}
         </div>
 
-        <MessageInput
+        <div className="p-4 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-fuchsia-500/10 border-t border-white/10">
+          <MessageInput
             setMessages={setMessages}
             selectedChat={selectedChat}
             />
+        </div>
         </>
       )}
     </div>

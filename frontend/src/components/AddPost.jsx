@@ -45,48 +45,49 @@ const submitHandler = async (e) => {
 };
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center pt-3 pb-5">
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
-        <form
-          onSubmit={submitHandler}
-          className="flex flex-col gap-4 items-center justify-between mb-4"
-        >
-          <input
-            type="text"
-            className="custom-input"
-            placeholder="Enter Caption"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
-          />
+    <div className="p-6">
+      <form
+        onSubmit={submitHandler}
+        className="flex flex-col gap-4 items-center"
+      >
+        <input
+          type="text"
+          className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+          placeholder="Enter Caption"
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
+        />
+        <label className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-lg px-4 py-3 text-white/80 cursor-pointer hover:bg-white/20 transition text-center">
+          {file ? "File Selected ✓" : "Choose File"}
           <input
             type="file"
-            className="custom-input"
+            className="hidden"
             accept={type === "post" ? "image/*" : "video/*"}
             onChange={changeFileHandler}
             required
           />
-          {filePrev && (
-            <>
-              {type === "post" ? (
-                <img src={filePrev} alt="" />
-              ) : (
-                <video
-                  controlsList="nodownload"
-                  controls
-                  src={filePrev}
-                  className="h-[450px] w-[300px]"
-                />
-              )}
-            </>
-          )}
-          <button
-            disabled={addLoading}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md"
-          >
-            {addLoading ? <LoadingAnimation /> : "+ Add Post"}
-          </button>
-        </form>
-      </div>
+        </label>
+        {filePrev && (
+          <div className="w-full rounded-lg overflow-hidden">
+            {type === "post" ? (
+              <img src={filePrev} alt="Preview" className="w-full h-auto rounded-lg" />
+            ) : (
+              <video
+                controlsList="nodownload"
+                controls
+                src={filePrev}
+                className="w-full h-auto rounded-lg"
+              />
+            )}
+          </div>
+        )}
+        <button
+          disabled={addLoading}
+          className="w-full bg-gradient-to-r from-cyan-500 to-emerald-500 text-white px-6 py-3 rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all font-semibold disabled:opacity-50"
+        >
+          {addLoading ? <LoadingAnimation /> : type === "post" ? "+ Add Post" : "+ Add Reel"}
+        </button>
+      </form>
     </div>
   );
 };

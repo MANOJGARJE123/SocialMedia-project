@@ -22,36 +22,52 @@ const Reels = () => {
       {loading ? (
         <Loading />
       ) : (
-        <div className="bg-gray-100">
-          <AddPost type="reel" />
-          <div className="flex m-auto gap-3 w-[300px] md:w-[500px]">
-            {reels && reels.length > 0 ? (
-              <PostCard
-                key={reels[index]._id}
-                value={reels[index]}
-                type={"reel"}
-              />
-            ) : (
-              <p>No reels yet</p>
-            )}
-            <div className="button flex flex-col justify-center items-center gap-6">
-              {index !== 0 && (
-                <button
-                  className="bg-gray-500 text-white py-5 px-5 rounded-full"
-                  onClick={prevReel}
-                >
-                  <FaArrowUp />
-                </button>
-              )}
-              {index !== reels.length - 1 && (
-                <button
-                  className="bg-gray-500 text-white py-5 px-5 rounded-full"
-                  onClick={nextReel}
-                >
-                  <FaArrowDownLong />
-                </button>
-              )}
+        <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220] pb-20">
+          <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+            <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-sky-300 text-3xl font-bold mb-6">
+              Reels
+            </h1>
+            
+            <div className="rounded-2xl p-0.5 bg-gradient-to-r from-indigo-500/60 via-sky-400/60 to-cyan-400/60 mb-6">
+              <div className="rounded-2xl bg-white/10 backdrop-blur-md">
+                <AddPost type="reel" />
+              </div>
             </div>
+
+            {reels && reels.length > 0 ? (
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                <div className="flex-1 max-w-md">
+                  <PostCard
+                    key={reels[index]._id}
+                    value={reels[index]}
+                    type={"reel"}
+                    layout="list"
+                  />
+                </div>
+                <div className="flex md:flex-col justify-center items-center gap-6">
+                  {index !== 0 && (
+                    <button
+                      className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
+                      onClick={prevReel}
+                    >
+                      <FaArrowUp className="text-xl" />
+                    </button>
+                  )}
+                  {index !== reels.length - 1 && (
+                    <button
+                      className="bg-gradient-to-r from-rose-500 to-red-500 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-rose-500/50 transition-all"
+                      onClick={nextReel}
+                    >
+                      <FaArrowDownLong className="text-xl" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-20">
+                <p className="text-white/60 text-lg">No reels yet. Create your first reel!</p>
+              </div>
+            )}
           </div>
         </div>
       )}

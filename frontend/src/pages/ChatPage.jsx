@@ -53,79 +53,96 @@ const ChatPage = () => {
   };
 
   return (
-    <div className="w-full md:w-[750px] md:p-4">
-      <div className="flex gap-4 mx-auto">
-        <div className="w-[30%]">
-          <div className="top">
-            <button
-              className="bg-blue-500 text-white px-3 py-1 rounded-full"
-              onClick={() => setSearch(!search)}
-            >
-              {search ? "X" : <FaSearch />}
-            </button>
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220] pb-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
+        <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-300 text-3xl font-bold mb-6">
+          Messages
+        </h1>
+        <div className="flex gap-4 h-[calc(100vh-180px)]">
+          {/* Chat List Sidebar */}
+          <div className="w-full md:w-[35%] rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl">
+            <div className="p-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-fuchsia-500/20 border-b border-white/10">
+              <button
+                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-full hover:shadow-lg hover:shadow-rose-500/50 transition-all"
+                onClick={() => setSearch(!search)}
+              >
+                {search ? "✕ Close" : <><FaSearch className="inline mr-2" /> New Chat</>}
+              </button>
+            </div>
 
             {search ? (
-              <>
+              <div className="p-4">
                 <input
                   type="text"
-                  className="custom-input w-full border border-gray-300 mt-2 px-2 py-1 rounded"
-                  placeholder="Enter name"
+                  className="w-full bg-white/10 backdrop-blur border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                  placeholder="Search users..."
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                 />
 
-                <div className="users mt-2">
+                <div className="users mt-4 space-y-2 max-h-[500px] overflow-y-auto">
                   {users.length > 0 ? (
                     users.map((e) => (
                       <div
                         key={e._id}
                         onClick={() => createNewChat(e._id)}
-                        className="bg-gray-500 text-white p-2 mt-2 cursor-pointer flex items-center gap-2 rounded"
+                        className="bg-gradient-to-r from-rose-500/20 to-pink-500/20 hover:from-rose-500/30 hover:to-pink-500/30 text-white p-3 cursor-pointer flex items-center gap-3 rounded-lg border border-white/10 transition-all"
                       >
                         <img
                           src={
                             e.profilePic?.url ||
                             "https://ui-avatars.com/api/?name=" + encodeURIComponent(e.name)
                           }
-                          className="w-8 h-8 rounded-full"
+                          className="w-10 h-10 rounded-full border-2 border-white/20"
                           alt="Profile"
                         />
-                        {e.name}
+                        <span className="font-medium">{e.name}</span>
                       </div>
                     ))
                   ) : (
-                    <p>No Users</p>
+                    <p className="text-white/60 text-center py-4">No Users Found</p>
                   )}
                 </div>
-              </>
+              </div>
             ) : (
-              <div className="flex flex-col justify-center items-center mt-2">
-                {chats.map((chat) => {
-                  const otherUser = chat.users.find((u) => u._id !== user._id);
-                  const isOnline = onlineUsers.includes(otherUser?._id);
-                  return (
-                    <Chat
-                      key={chat._id}
-                      chat={chat}
-                      setSelectedChat={setSelectedChat}
-                      isOnline={isOnline}
-                    />
-                  );
-                })}
+              <div className="flex flex-col mt-2 max-h-[600px] overflow-y-auto">
+                {chats.length > 0 ? (
+                  chats.map((chat) => {
+                    const otherUser = chat.users.find((u) => u._id !== user._id);
+                    const isOnline = onlineUsers.includes(otherUser?._id);
+                    return (
+                      <Chat
+                        key={chat._id}
+                        chat={chat}
+                        setSelectedChat={setSelectedChat}
+                        isOnline={isOnline}
+                      />
+                    );
+                  })
+                ) : (
+                  <p className="text-white/60 text-center py-8">No chats yet. Start a new conversation!</p>
+                )}
               </div>
             )}
           </div>
-        </div>
 
-        {selectedChat === null ? (
-          <div className="w-[70%] mx-20 mt-40 text-2xl">
-            Hello 👋 {user.name}, select a chat to start conversation
-          </div>
-        ) : (
-          <div className="w-[70%]">
-            <MessageContainer selectedChat={selectedChat} setChats={setChats} />
-          </div>
-        )}
+          {/* Message Container */}
+          {selectedChat === null ? (
+            <div className="flex-1 flex items-center justify-center rounded-2xl bg-white/5 backdrop-blur border border-white/10">
+              <div className="text-center">
+                <div className="text-6xl mb-4">👋</div>
+                <h2 className="text-transparent bg-clip-text bg-gradient-to-r from-rose-400 to-pink-300 text-2xl font-bold mb-2">
+                  Hello {user.name}!
+                </h2>
+                <p className="text-white/70">Select a chat to start conversation</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1">
+              <MessageContainer selectedChat={selectedChat} setChats={setChats} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
