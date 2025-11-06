@@ -12,5 +12,4 @@ const generateToken = (id, res) =>{
     });
 };
 
-
 export default generateToken;

@@ -34,7 +34,11 @@ export const PostContextProvider = ({ children }) => {
       setFilePrev("");
       setCaption("");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to add post");
+      if (error?.response?.status === 403) {
+        toast.error("Your image cannot be uploaded because it may contain inappropriate content.");
+      } else {
+        toast.error(error?.response?.data?.message || "Failed to add post");
+      }
     } finally {
       setAddLoading(false);
     }

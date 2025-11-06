@@ -22,14 +22,28 @@ const AddPost = ({ type }) => {
     };
   };
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    const formdata = new FormData();
+const submitHandler = async (e) => {
+  e.preventDefault();
+  const formdata = new FormData();
 
-    formdata.append("caption", caption);
-    formdata.append("file", file);
-    addPost(formdata, setFile, setCaption, setFilePrev, type);
-  };
+  formdata.append("caption", caption);
+  formdata.append("file", file);
+
+  try {
+    await addPost(formdata, setFile, setCaption, setFilePrev, type);
+    // Optionally show success
+    alert("Post created successfully!");
+  } catch (err) {
+    if (err.response?.status === 403) {
+      const reasons = err.response?.data?.reasons;
+      const detail = Array.isArray(reasons) && reasons.length ? `\nReasons: ${reasons.join(", ")}` : "";
+      alert("Upload blocked by AI moderation." + detail);
+    } else {
+      alert("Something went wrong while uploading the post.");
+    }
+  }
+};
+
   return (
     <div className="bg-gray-100 flex items-center justify-center pt-3 pb-5">
       <div className="bg-white p-8 rounded-lg shadow-md max-w-md">

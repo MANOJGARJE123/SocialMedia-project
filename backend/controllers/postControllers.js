@@ -2,57 +2,77 @@ import TryCatch  from "../utils/TryCatch.js"
 import { Post } from"../models/postModel.js"
 import getDataUrl from "../utils/urlGenrator.js"
 import cloudinary from "cloudinary"
+import { moderateMediaAndText } from "../utils/aiModeration.js";
 
 //Handles creation of new posts or reels.
-export const newPost = TryCatch(async(req, res)=>{
-    const{caption} = req.body;
+export const newPost = TryCatch(async (req, res) => {
+  const { caption } = req.body;
+  const ownerId = req.user._id;
+  const file = req.file;
 
-    const ownerId = req.user._id;
+  if (!file) return res.status(400).json({ message: "No file uploaded" });
 
-    const file = req.file
-    const fileUrl = getDataUrl(file)
+  const fileUrl = getDataUrl(file);
+  let option;
+  const type = req.query.type;
 
-    let option
+  // Cloudinary upload options
+  if (type === "reel") {
+    option = { resource_type: "video", access_mode: "public" };
+  } else if (file.mimetype === "application/pdf") {
+    option = { resource_type: "raw", access_mode: "public", type: "upload" };
+  } else {
+    option = { resource_type: "auto", access_mode: "public" };
+  }
 
-    const type = req.query.type
+  // Step 1: Upload temporarily to Cloudinary
+  const tempUpload = await cloudinary.v2.uploader.upload(fileUrl.content, { folder: "temp", ...option });
+  const imageUrl = tempUpload.secure_url;
 
-    //this is for cloudinary who needs different options for videos, PDFs, and images.
-    if (type === "reel") {
-      option = {
-        resource_type: "video",
-        access_mode: "public",
-      };
-    } else if (file.mimetype === "application/pdf") {
-      option = {
-        resource_type: "raw",            // Tells Cloudinary this is a raw file (PDF)
-        access_mode: "public",           // Makes it publicly accessible
-        type: "upload",                  // Must be explicitly set for raw files
-      };
-    } else {
-      option = {
-        resource_type: "auto",
-        access_mode: "public",
-      };
-    }
-
-    const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content, option);
-    
-
-    const post = await Post.create({
-        caption,
-        post: {
-          id: myCloud.public_id, 
-          url: myCloud.secure_url,
-        },
-        
-        owner:ownerId,
-        type,
-    })
-    res.status(201).json({
-        message:"Post created",
-        post,
+  // Step 2: AI moderation (image + caption) with Gemini. For videos/PDFs, only text moderation is applied.
+  let allowed = true;
+  let reasons = [];
+  if (type !== "reel" && file.mimetype !== "application/pdf") {
+    // We have an image: reuse original uploaded bytes for better results
+    const moderation = await moderateMediaAndText({
+      imageBytes: file.buffer,
+      imageMimeType: file.mimetype,
+      caption,
     });
-})
+    allowed = moderation.allowed;
+    reasons = moderation.reasons;
+  } else {
+    // Only caption moderation for non-image content
+    const moderation = await moderateMediaAndText({
+      imageBytes: undefined,
+      imageMimeType: undefined,
+      caption,
+    });
+    allowed = moderation.allowed;
+    reasons = moderation.reasons;
+  }
+
+  if (!allowed) {
+    await cloudinary.v2.uploader.destroy(tempUpload.public_id);
+    return res.status(403).json({ message: "Content blocked by AI moderation", reasons });
+  }
+
+  // Step 3: Upload to final folder
+  const finalUpload = await cloudinary.v2.uploader.upload(fileUrl.content, { folder: "posts", ...option });
+
+  // Step 4: Save post to DB
+  const post = await Post.create({
+    caption,
+    post: { id: finalUpload.public_id, url: finalUpload.secure_url },
+    owner: ownerId,
+    type,
+  });
+
+  res.status(201).json({
+    message: "Post created",
+    post,
+  });
+});
 
 export const deletePost = TryCatch(async (req, res) => {
     const post = await Post.findById(req.params.id);

@@ -134,4 +134,12 @@ export const updatePassword = TryCatch(async (req, res) => {
     });
 });
 
+export const getAllUsers = TryCatch(async(req,res)=>{
+    const users = await User.find().select("-password");
+
+    res.status(200).json({ // ✅ fixed typo
+        success: true,
+        users,
+    });
+});
 
