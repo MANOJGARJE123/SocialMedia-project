@@ -21,7 +21,6 @@ function hasInappropriateKeywords(text) {
 }
 
 export async function moderateMediaAndText({ imageBytes, imageMimeType, caption }) {
-    // Quick keyword check first - block immediately if obvious inappropriate words found
     if (caption && hasInappropriateKeywords(caption)) {
         return { 
             allowed: false, 
@@ -99,7 +98,6 @@ Be strict - when in doubt, BLOCK the content.`;
 	try {
 		const result = await model.generateContent({ contents: [{ role: "user", parts: prompt }] });
 		
-		// Check if Gemini's safety filters blocked the content
 		const promptFeedback = result.response.promptFeedback;
 		if (promptFeedback && promptFeedback.blockReason) {
 			
@@ -114,12 +112,10 @@ Be strict - when in doubt, BLOCK the content.`;
 		try {
 			parsed = JSON.parse(text);
 		} catch {
-			// Try to extract JSON substring if the model wrapped it
 			const match = text.match(/\{[\s\S]*\}/);
 			parsed = match ? JSON.parse(match[0]) : { allowed: true, reasons: [] };
 		}
 		
-		// If parsed result says not allowed, return it
 		if (parsed.allowed === false) {
 			return {
 				allowed: false,
@@ -132,11 +128,9 @@ Be strict - when in doubt, BLOCK the content.`;
 			reasons: Array.isArray(parsed.reasons) ? parsed.reasons : [],
 		};
     } catch (e) {
-        // Log error for debugging
         console.error("Moderation error:", e.message);
         console.error("Full error:", e);
         
-        // If it's a model not found error, try alternative model
         if (e.message && e.message.includes("not found")) {
             console.log("Model not found, trying gemini-2.5-flash as fallback...");
             try {

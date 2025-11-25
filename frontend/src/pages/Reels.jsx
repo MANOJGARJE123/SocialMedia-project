@@ -55,7 +55,7 @@ const Reels = () => {
                   )}
                   {index !== reels.length - 1 && (
                     <button
-                      className="bg-gradient-to-r from-rose-500 to-red-500 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-rose-500/50 transition-all"
+                      className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
                       onClick={nextReel}
                     >
                       <FaArrowDownLong className="text-xl" />

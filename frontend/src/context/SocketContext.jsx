@@ -14,15 +14,14 @@ export const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     if (!user) return;
 
-    const socket = io(EndPoint, {//Connects to the Socket.IO server at the URL stored in EndPoint
+    const socket = io(EndPoint, {
       query: {
-        userId: user._id, //Here, it sends the current user’s ID,
+        userId: user._id,
       },
     });
 
     setSocket(socket);
 
-    //server event listening
     socket.on("getOnlineUser", (users) => {
       setOnlineUsers(users);
     });

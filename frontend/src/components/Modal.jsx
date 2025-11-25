@@ -1,10 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-//This Modal is a reusable popup component designed to show a list of Followers 
-// or Followings when you open it from the Account page.
-
-const Modal = ({ value = [], title, setShow }) => {//It accepts three props
+const Modal = ({ value = [], title, setShow }) => {
   return (
     <div className="fixed inset-0 bg-black/10 backdrop-brightness-90 flex items-center justify-center z-30">
       <div className="bg-white rounded-lg p-4 shadow-lg w-[300px] max-h-[300px] overflow-y-auto relative">
@@ -20,7 +17,6 @@ const Modal = ({ value = [], title, setShow }) => {//It accepts three props
 
         {value.length > 0 ? (
           <div className="flex flex-col gap-2">
-            {/* e stand for each user and i means current user */}
             {value.map((e, i) => (
               <Link
                 to={`/user/${e._id}`}

@@ -15,8 +15,6 @@ cloudinary.v2.config({
     api_secret: process.env.Cloudinary_Secret       
 });
 
-
-//using middleware
 app.use(express.json());
 app.use(cookieParser());
 
@@ -28,20 +26,35 @@ app.get("/", (req, res) => {
 
 app.get("/api/messages/chats", isAuth, async (req, res) => {
   try {
+    const currentUser = await User.findById(req.user._id);
+    
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const chats = await Chat.find({
       users: req.user._id,
     }).populate({
       path: "users",
-      select: "name profilePic",
+      select: "name profilePic emailDomain",
     });
 
-    chats.forEach((e) => {
+    const filteredChats = chats.filter((chat) => {
+      const otherUsers = chat.users.filter(
+        (user) => user._id.toString() !== req.user._id.toString()
+      );
+      return otherUsers.length > 0 && otherUsers.every(
+        (user) => user.emailDomain === currentUser.emailDomain
+      );
+    });
+
+    filteredChats.forEach((e) => {
       e.users = e.users.filter(
         (user) => user._id.toString() !== req.user._id.toString()
       );
     });
 
-    res.json(chats);
+    res.json(filteredChats);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -53,13 +66,19 @@ app.get("/api/messages/chats", isAuth, async (req, res) => {
 app.get("/api/user/all", isAuth, async (req, res) => {
   try {
     const search = req.query.search || "";
-    // Find users whose name matches the search query, excluding the logged-in user
+    const currentUser = await User.findById(req.user._id);
+    
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const users = await User.find({
       name: { 
         $regex: search, 
-        $options: "i" // case-insensitive search
+        $options: "i"
       },
-      _id: { $ne: req.user._id } // exclude logged-in user
+      emailDomain: currentUser.emailDomain,
+      _id: { $ne: req.user._id }
     }).select("-password");
 
     res.json(users);
@@ -70,22 +89,16 @@ app.get("/api/user/all", isAuth, async (req, res) => {
   }
 });
 
-
-
-//importing routes
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import postRoutes from './routes/postRoutes.js'
 import messageRoutes from './routes/messageRoutes.js'
 
-
-//using routes
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/messages",messageRoutes)
 
-//using routes
 server.listen(port, () => {
     console.log(`server is running on http://localhost:${port}`);
     connectDb()

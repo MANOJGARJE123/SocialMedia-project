@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { UserData } from "./context/UserContext";
 
-// Pages & Components
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -44,7 +43,6 @@ const App = () => {
             <Route path="/chat" element={isAuth?<ChatPage/>:<Login/>}></Route>
           </Routes>
 
-          {/* Show bottom navbar only when authenticated */}
           {isAuth && <NavigationBar />}
         </BrowserRouter>
       )}

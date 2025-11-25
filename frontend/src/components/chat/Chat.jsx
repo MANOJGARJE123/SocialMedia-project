@@ -9,7 +9,7 @@ const Chat = ({ chat, setSelectedChat, isOnline }) => {
     <div>
       {user && (
         <div
-          className="bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-fuchsia-500/10 hover:from-rose-500/20 hover:via-pink-500/20 hover:to-fuchsia-500/20 py-3 px-4 rounded-lg cursor-pointer mx-2 my-2 border border-white/10 transition-all"
+          className="bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-cyan-500/10 hover:from-blue-500/20 hover:via-indigo-500/20 hover:to-cyan-500/20 py-3 px-4 rounded-lg cursor-pointer mx-2 my-2 border border-white/10 transition-all"
           onClick={() => setSelectedChat(chat)}
         >
           <div className="flex items-center gap-3">

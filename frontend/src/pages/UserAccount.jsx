@@ -90,13 +90,12 @@ const UserAccount = () => {
         <Modal value={followingsData} title={"Followings"} setShow={setShow1} />
       )}
 
-      {/* Profile header */}
       <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-        <div className="h-40 w-full bg-gradient-to-r from-fuchsia-600/70 via-cyan-500/70 to-emerald-500/70" />
+        <div className="h-40 w-full bg-gradient-to-r from-blue-600/70 via-indigo-500/70 to-cyan-500/70" />
         <div className="bg-white/5 backdrop-blur px-6 md:px-10 pb-6 pt-0">
           <div className="flex flex-col md:flex-row md:items-end gap-6 -mt-16">
             <div className="shrink-0">
-              <div className="relative inline-block p-1 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400">
+              <div className="relative inline-block p-1 rounded-full bg-gradient-to-r from-blue-500 to-indigo-400">
                 <img
                   src={user.profilePic?.url || "/default-avatar.png"}
                   alt="Profile"
@@ -124,7 +123,7 @@ const UserAccount = () => {
                   onClick={followHandler}
                   className={`px-6 py-2 rounded-full text-white font-semibold shadow-md shadow-black/20 ${
                     followed
-                      ? "bg-gradient-to-r from-rose-500 to-red-500"
+                      ? "bg-gradient-to-r from-red-500 to-red-600"
                       : "bg-gradient-to-r from-indigo-500 to-sky-400"
                   }`}
                 >
@@ -136,14 +135,13 @@ const UserAccount = () => {
         </div>
       </div>
 
-      {/* Controls */}
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center gap-3 bg-white/10 backdrop-blur p-1 rounded-full border border-white/10">
           <button
             onClick={() => setType("post")}
             className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
               type === "post"
-                ? "bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-white shadow-md shadow-cyan-200"
+                ? "bg-gradient-to-r from-blue-500 to-indigo-400 text-white shadow-md shadow-blue-200"
                 : "bg-white/70 text-gray-700 hover:bg-white"
             }`}
           >
@@ -166,7 +164,7 @@ const UserAccount = () => {
             <button
               className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
                 viewMode === "grid"
-                  ? "bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-white shadow-md shadow-cyan-200"
+                  ? "bg-gradient-to-r from-blue-500 to-indigo-400 text-white shadow-md shadow-blue-200"
                   : "bg-white/70 text-gray-700 hover:bg-white"
               }`}
               onClick={() => setViewMode("grid")}
@@ -225,7 +223,7 @@ const UserAccount = () => {
             />
             {index < myReels.length - 1 && (
               <button
-                className="bg-gradient-to-r from-rose-500 to-red-500 text-white py-5 px-5 rounded-full"
+                className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-5 px-5 rounded-full"
                 onClick={nextReel}
               >
                 <FaArrowDownLong />

@@ -1,5 +1,3 @@
-// src/components/chat/MessageContainer.jsx
-
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { UserData } from "../../context/UserContext";
@@ -55,7 +53,6 @@ const MessageContainer = ({ selectedChat, setChats }) => {
     setLoading(false);
   };
 
-  // Scroll to bottom when messages change
   const messageContainerRef = useRef(null);
   useEffect(() => {
     if (messageContainerRef.current) {
@@ -72,8 +69,7 @@ const MessageContainer = ({ selectedChat, setChats }) => {
 
   return (
     <div className="h-full rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl flex flex-col">
-      {/* Header */}
-      <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-rose-500/20 via-pink-500/20 to-fuchsia-500/20 border-b border-white/10">
+      <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-500/20 via-indigo-500/20 to-cyan-500/20 border-b border-white/10">
         <img
           src={selectedChat.users[0].profilePic?.url || "/default-avatar.png"}
           alt="Profile"
@@ -82,7 +78,6 @@ const MessageContainer = ({ selectedChat, setChats }) => {
         <h2 className="text-white text-lg font-semibold">{selectedChat.users[0].name}</h2>
       </div>
 
-      {/* Loading spinner or Messages */}
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
           <LoadingAnimation />
@@ -105,7 +100,7 @@ const MessageContainer = ({ selectedChat, setChats }) => {
            )}
         </div>
 
-        <div className="p-4 bg-gradient-to-r from-rose-500/10 via-pink-500/10 to-fuchsia-500/10 border-t border-white/10">
+        <div className="p-4 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-cyan-500/10 border-t border-white/10">
           <MessageInput
             setMessages={setMessages}
             selectedChat={selectedChat}

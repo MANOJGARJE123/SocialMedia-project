@@ -10,13 +10,11 @@ const UsersSideBar = () => {
     try {
       setError("");
 
-      // If sidebar is already open, just close it
       if (showSidebar) {
         setShowSidebar(false);
         return;
       }
 
-      // Otherwise, fetch data and open it
       const res = await axios.get("/api/user/all", { withCredentials: true });
       const data = res.data;
 

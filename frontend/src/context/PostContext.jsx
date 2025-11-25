@@ -46,9 +46,19 @@ export const PostContextProvider = ({ children }) => {
 
   async function likePost(id) {
     try {
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+      
       const { data } = await axios.post(`/api/post/like/${id}`);
       toast.success(data.message);
-      fetchPosts();
+      
+      await fetchPosts();
+      
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant'
+        });
+      });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to like post");
     }
@@ -56,11 +66,22 @@ export const PostContextProvider = ({ children }) => {
 
   async function addComment(id, comment, setComment, setShow) {
     try {
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+      
       const { data } = await axios.post(`/api/post/comment/${id}`, { comment });
       toast.success(data.message);
-      fetchPosts();
+      
+      await fetchPosts();
+      
       setComment("");
       setShow(false);
+      
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant'
+        });
+      });
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to add comment");
     }

@@ -34,13 +34,16 @@ const PostCard = ({ type, value, layout = "grid" }) => {
     setIsLike(value.likes.includes(user._id));
   }, [value.likes, user?._id]);
 
-  const handleLike = () => {
+  const handleLike = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setIsLike(!isLike);
     likePost?.(value._id);
   };
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     addComment(value._id, comment, setComment, setShow);
   };
 
@@ -73,7 +76,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
     ? "rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all"
     : "rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl";
 
-  const headerBg = "bg-gradient-to-r from-fuchsia-500/10 via-cyan-500/10 to-emerald-500/10";
+  const headerBg = "bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-cyan-500/10";
   const actionBtn = "hover:bg-white/10 rounded-full p-1";
 
   return (
@@ -85,7 +88,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
           </button>
           <button
             onClick={deleteHandler}
-            className="bg-gradient-to-r from-rose-500 to-red-500 text-white py-1 px-3 rounded-md"
+            className="bg-gradient-to-r from-red-500 to-red-600 text-white py-1 px-3 rounded-md"
             disabled={loading}
           >
             {loading ? <LoadingAnimation /> : "Delete"}
@@ -149,7 +152,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
               </button>
               <button
                 onClick={() => setShowInput(false)}
-                className="text-sm bg-gradient-to-r from-rose-500 to-red-500 text-white px-2 py-1 rounded-md ml-2"
+                className="text-sm bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 rounded-md ml-2"
               >
                 X
               </button>
@@ -174,16 +177,26 @@ const PostCard = ({ type, value, layout = "grid" }) => {
 
         <div className="flex items-center justify-between text-white/80 px-5 py-4">
           <div className="flex items-center space-x-2">
-            <span onClick={handleLike} className="text-2xl cursor-pointer">
-              {isLike ? <IoHeartSharp className="text-rose-500" /> : <IoHeartOutline />}
-            </span>
-            <button className={actionBtn}>
+            <button 
+              onClick={handleLike} 
+              className="text-2xl cursor-pointer bg-transparent border-none p-0 focus:outline-none"
+              type="button"
+              aria-label="Like post"
+            >
+              {isLike ? <IoHeartSharp className="text-blue-500" /> : <IoHeartOutline />}
+            </button>
+            <button className={actionBtn} type="button">
               {value.likes?.length || 0} likes
             </button>
           </div>
           <button
             className={`flex items-center gap-2 px-3 ${actionBtn}`}
-            onClick={() => setShow(!show)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShow(!show);
+            }}
+            type="button"
           >
             <BsChatFill />
             <span>{value.comments?.length || 0} comments</span>
@@ -293,10 +306,3 @@ export const Comment = ({ value,user,owner,id }) => {
 
 
 
-
-// PostCard is a reusable component to display posts or reels. 
-// It shows owner info, media, caption, likes, and comments.
-//  Users can like posts, add comments, and delete their own posts. 
-// The post owner can also edit the caption. The component uses local state for likes, 
-// comments, modal visibility, and caption editing. It also integrates with PostContext for
-//  performing actions like liking, deleting, and fetching posts.

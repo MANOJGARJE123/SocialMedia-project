@@ -26,6 +26,7 @@ export const registerUser = TryCatch(async (req , res) =>{
 
             const fileUrl = getDataUrl(file);
 
+            const emailDomain = email.split("@")[1];
             const hashPassword = await bcrypt.hash(password, 10);
             const myCloud = await cloudinary.v2.uploader.upload(fileUrl.content); //The Cloudinary API function that uploads the file.
 
@@ -38,6 +39,7 @@ export const registerUser = TryCatch(async (req , res) =>{
                     id: myCloud.public_id,//Unique ID of the uploaded file on Cloudinary
                     url: myCloud.secure_url,//Direct URL to access the uploaded file
                 },
+                emailDomain,
             });
 
             generateToken(user._id, res);

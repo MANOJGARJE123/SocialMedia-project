@@ -6,7 +6,7 @@ const Message = ({ ownMessage, message }) => {
       <div
         className={`max-w-[70%] px-4 py-2 rounded-2xl ${
           ownMessage
-            ? "bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-br-sm"
+            ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-sm"
             : "bg-white/10 backdrop-blur text-white border border-white/20 rounded-bl-sm"
         }`}
       >

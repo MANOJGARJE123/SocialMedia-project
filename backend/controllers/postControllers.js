@@ -1,10 +1,10 @@
 import TryCatch  from "../utils/TryCatch.js"
 import { Post } from"../models/postModel.js"
+import { User } from "../models/userModel.js"
 import getDataUrl from "../utils/urlGenrator.js"
 import cloudinary from "cloudinary"
 import { moderateMediaAndText } from "../utils/aiModeration.js";
 
-//Handles creation of new posts or reels.
 export const newPost = TryCatch(async (req, res) => {
   const { caption } = req.body;
   const ownerId = req.user._id;
@@ -16,7 +16,7 @@ export const newPost = TryCatch(async (req, res) => {
   let option;
   const type = req.query.type;
 
-  // Cloudinary upload options
+  
   if (type === "reel") {
     option = { resource_type: "video", access_mode: "public" };
   } else if (file.mimetype === "application/pdf") {
@@ -25,15 +25,12 @@ export const newPost = TryCatch(async (req, res) => {
     option = { resource_type: "auto", access_mode: "public" };
   }
 
-  // Step 1: Upload temporarily to Cloudinary
   const tempUpload = await cloudinary.v2.uploader.upload(fileUrl.content, { folder: "temp", ...option });
   const imageUrl = tempUpload.secure_url;
 
-  // Step 2: AI moderation (image + caption) with Gemini. For videos/PDFs, only text moderation is applied.
   let allowed = true;
   let reasons = [];
   if (type !== "reel" && file.mimetype !== "application/pdf") {
-    // We have an image: reuse original uploaded bytes for better results
     const moderation = await moderateMediaAndText({
       imageBytes: file.buffer,
       imageMimeType: file.mimetype,
@@ -42,7 +39,6 @@ export const newPost = TryCatch(async (req, res) => {
     allowed = moderation.allowed;
     reasons = moderation.reasons;
   } else {
-    // Only caption moderation for non-image content
     const moderation = await moderateMediaAndText({
       imageBytes: undefined,
       imageMimeType: undefined,
@@ -57,10 +53,8 @@ export const newPost = TryCatch(async (req, res) => {
     return res.status(403).json({ message: "Content blocked by AI moderation", reasons });
   }
 
-  // Step 3: Upload to final folder
   const finalUpload = await cloudinary.v2.uploader.upload(fileUrl.content, { folder: "posts", ...option });
 
-  // Step 4: Save post to DB
   const post = await Post.create({
     caption,
     post: { id: finalUpload.public_id, url: finalUpload.secure_url },
@@ -93,22 +87,30 @@ export const deletePost = TryCatch(async (req, res) => {
   });
 
   export const getAllPosts = TryCatch(async (req, res) => {
+    const currentUser = await User.findById(req.user._id);
+    
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    const posts = await Post.find({ type: "post" })
-      .sort({ createdAt: -1 })  //Sorts by most recent first
+    const allPosts = await Post.find({ type: "post" })
+      .sort({ createdAt: -1 })  
       .populate("owner","-password") 
       .populate({
         path:"comments.user",  
         select:"-password",
       })
     
-    const reels = await Post.find({ type: "reel" })
+    const allReels = await Post.find({ type: "reel" })
       .sort({ createdAt: -1 }) 
       .populate("owner","-password")
       .populate({
         path:"comments.user",
         select:"-password",
       })
+
+    const posts = allPosts.filter(post => post.owner && post.owner.emailDomain === currentUser.emailDomain);
+    const reels = allReels.filter(reel => reel.owner && reel.owner.emailDomain === currentUser.emailDomain);
 
     res.json({ posts, reels });
 });
@@ -221,7 +223,7 @@ export const editCaption = TryCatch(async (req, res) => {
     });
   }
 
-  post.caption = req.body.caption; //Get the new caption from the request
+  post.caption = req.body.caption; 
 
   await post.save();
 

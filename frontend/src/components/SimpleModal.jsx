@@ -28,7 +28,3 @@ export default SimpleModal;
 
 
 
-
-//SimpleModal is a generic, reusable popup component that can show 
-// any content (buttons, text, forms) in a centered overlay with a dark background. 
-// It is used in your PostCard for options like Edit or Delete a post.

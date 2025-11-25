@@ -9,7 +9,6 @@ const AddPost = ({ type }) => {
 
   const { addPost, addLoading } = PostData();
 
-  //It reads the selected file, creates a preview URL for display, and stores the actual file for submission.
   const changeFileHandler = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
@@ -31,7 +30,6 @@ const submitHandler = async (e) => {
 
   try {
     await addPost(formdata, setFile, setCaption, setFilePrev, type);
-    // Optionally show success
     alert("Post created successfully!");
   } catch (err) {
     if (err.response?.status === 403) {

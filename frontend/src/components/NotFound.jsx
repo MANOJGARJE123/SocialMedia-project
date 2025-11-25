@@ -1,8 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-//This is a 404 page — when user navigate to wrong route then it goes to home page
-
 const NotFound = () => {
   const navigate = useNavigate();
   

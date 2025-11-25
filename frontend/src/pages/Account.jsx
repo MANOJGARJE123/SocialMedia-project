@@ -125,7 +125,6 @@ const Account = ({ user }) => {
 
       <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220] pb-20">
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8 pt-6 pb-12">
-          {/* Profile Header */}
           <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl mb-6">
             <div className="h-40 w-full bg-gradient-to-r from-amber-600/70 via-orange-500/70 to-red-500/70" />
             <div className="bg-white/5 backdrop-blur px-6 md:px-10 pb-6 pt-0">
@@ -157,7 +156,7 @@ const Account = ({ user }) => {
                         Update
                       </button>
                       <button
-                        className="bg-gradient-to-r from-rose-500 to-red-500 text-white p-2 rounded-full"
+                        className="bg-gradient-to-r from-red-500 to-red-600 text-white p-2 rounded-full"
                         onClick={() => setShowInput(false)}
                       >
                         ✕
@@ -208,7 +207,7 @@ const Account = ({ user }) => {
                   </div>
                   <button
                     onClick={logoutHandler}
-                    className="bg-gradient-to-r from-rose-500 to-red-500 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-rose-500/50 transition"
+                    className="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition"
                   >
                     Logout
                   </button>
@@ -217,7 +216,6 @@ const Account = ({ user }) => {
             </div>
           </div>
 
-          {/* Update Password Section */}
           <div className="rounded-2xl overflow-hidden bg-white/5 backdrop-blur border border-white/10 shadow-xl mb-6">
             <button
               onClick={() => setShowUpdatePass(!showUpdatePass)}
@@ -257,7 +255,6 @@ const Account = ({ user }) => {
             )}
           </div>
 
-          {/* Controls */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3 bg-white/10 backdrop-blur p-1 rounded-full border border-white/10">
               <button
@@ -283,7 +280,6 @@ const Account = ({ user }) => {
             </div>
           </div>
 
-          {/* Posts/Reels */}
           {type === "post" &&
             (myPosts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -316,7 +312,7 @@ const Account = ({ user }) => {
 
                 {index < myReels.length - 1 && (
                   <button
-                    className="bg-gradient-to-r from-rose-500 to-red-500 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-rose-500/50 transition-all"
+                    className="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-4 px-4 rounded-full hover:shadow-lg hover:shadow-indigo-500/50 transition-all"
                     onClick={nextReel}
                   >
                     <FaArrowDownLong />

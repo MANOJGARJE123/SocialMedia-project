@@ -7,8 +7,6 @@ import { ChatContextProvider } from "./context/ChatContext.jsx";
 import "./index.css";
 import { SocketContextProvider } from "./context/SocketContext.jsx";
 
-
-// ✅ Corrected: Removed invalid JSX-style comments
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <UserContextProvider>

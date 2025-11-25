@@ -35,6 +35,10 @@
         id:String, //we can updatate the image in cloudinary using this id
         url:String,
       },
+       emailDomain : {
+        type :  String,
+        required : true,
+       }
     },
     {
         timestamps:true,
