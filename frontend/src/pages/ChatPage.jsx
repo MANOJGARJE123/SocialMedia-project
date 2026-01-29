@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ChatData } from "../context/ChatContext";
 import { UserData } from "../context/UserContext";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 import { FaSearch } from "react-icons/fa";
 import Chat from "../components/chat/Chat";
 import MessageContainer from "../components/chat/MessageContainer";
@@ -18,7 +18,7 @@ const ChatPage = () => {
 
   const fetchAllUsers = async () => {
     try {
-      const { data } = await axios.get("/api/user/all?search=" + query, {
+      const { data } = await axiosInstance.get("/user/all?search=" + query, {
         withCredentials: true,
       });
       setUsers(data);
@@ -29,7 +29,7 @@ const ChatPage = () => {
 
   const getAllChats = async () => {
     try {
-      const { data } = await axios.get("/api/messages/chats", {
+      const { data } = await axiosInstance.get("/messages/chats", {
         withCredentials: true,
       });
       setChats(data);

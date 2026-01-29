@@ -3,7 +3,7 @@ import { UserData } from "../context/UserContext";
 import { PostData } from "../context/PostContext";
 import PostCard from "../components/PostCard";
 import { FaArrowUp, FaArrowDownLong } from "react-icons/fa6";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 import { useParams } from "react-router-dom";
 import Modal from "../components/Modal";
 
@@ -27,7 +27,7 @@ const UserAccount = () => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/user/" + params.id);
+      const { data } = await axiosInstance.get("/user/" + params.id);
       setUser(data);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -38,7 +38,7 @@ const UserAccount = () => {
 
   const followData = async () => {
     try {
-      const { data } = await axios.get("/api/user/followdata/" + user._id);
+      const { data } = await axiosInstance.get("/user/followdata/" + user._id);
       setFollowersData(data.followers);
       setFollowingsData(data.followings);
     } catch (error) {

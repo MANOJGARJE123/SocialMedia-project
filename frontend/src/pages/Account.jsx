@@ -5,7 +5,7 @@ import { PostData } from "../context/PostContext";
 import PostCard from "../components/PostCard";
 import { FaArrowDownLong, FaArrowUp } from "react-icons/fa6";
 import Modal from "../components/Modal";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 import { Loading } from "../components/Loading";
 import { CiEdit } from "react-icons/ci";
 import toast from "react-hot-toast";
@@ -29,7 +29,7 @@ const Account = ({ user }) => {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("/api/user/" + params.id);
+      const { data } = await axiosInstance.get("/user/" + params.id);
       setUser(data);
     } catch (error) {
       console.error("Error fetching user:", error);
@@ -40,7 +40,7 @@ const Account = ({ user }) => {
 
   const fetchFollowData = async () => {
     try {
-      const { data } = await axios.get("/api/user/followdata/" + User._id);
+      const { data } = await axiosInstance.get("/user/followdata/" + User._id);
       setFollowersData(data.followers);
       setFollowingsData(data.followings);
     } catch (error) {
@@ -104,7 +104,7 @@ const Account = ({ user }) => {
   async function updatePassword(e) {
     e.preventDefault();
     try {
-      const { data } = await axios.post("/api/user/" + user._id, {
+      const { data } = await axiosInstance.post("/user/" + user._id, {
         oldPassword,
         newPassword,
       });

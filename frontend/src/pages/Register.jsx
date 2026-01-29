@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance.js';
 import toast from 'react-hot-toast';
 
 const Register = () => {
@@ -41,7 +41,7 @@ const Register = () => {
     formData.append("file", file);
 
     try {
-      const { data } = await axios.post("/api/auth/register", formData, {
+      const { data } = await axiosInstance.post("/auth/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });

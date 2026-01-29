@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -13,7 +13,7 @@ export const UserContextProvider = ({ children }) => {
     async function registerUser(formdata, navigate, fetchPosts) {
     setLoading(true);
     try {
-      const { data } = await axios.post("/api/auth/register", formdata);
+      const { data } = await axiosInstance.post("/auth/register", formdata);
 
       toast.success(data.message);
       setIsAuth(true);
@@ -29,7 +29,7 @@ export const UserContextProvider = ({ children }) => {
 
   async function loginUser(email, password, navigate,fetchPosts) {
     try {
-      const { data } = await axios.post("/api/auth/login", { email, password });
+      const { data } = await axiosInstance.post("/auth/login", { email, password });
       toast.success(data.message);
       setIsAuth(true); //user now authenticated
       setUser(data.user); // store user info
@@ -42,7 +42,7 @@ export const UserContextProvider = ({ children }) => {
 
   async function fetchUser() { //currently loggedin user
     try {
-      const { data } = await axios.get("/api/user/me");
+      const { data } = await axiosInstance.get("/user/me");
       setUser(data);
       setIsAuth(true);
     } catch (error) {
@@ -55,7 +55,7 @@ export const UserContextProvider = ({ children }) => {
 
   async function logoutUser(navigate) {
     try {
-      await axios.get("/api/auth/logout");
+      await axiosInstance.get("/auth/logout");
       setIsAuth(false);
       setUser(null);
       toast.success("Logged out successfully");
@@ -67,7 +67,7 @@ export const UserContextProvider = ({ children }) => {
 
   async function followUser(id, fetchUser) {
     try {
-      const { data } = await axios.post("/api/user/follow/" + id);
+      const { data } = await axiosInstance.post("/user/follow/" + id);
 
       toast.success(data.message);
       fetchUser();
@@ -78,7 +78,7 @@ export const UserContextProvider = ({ children }) => {
 
 async function updateProfilePic(id, formdata, setFile) {
   try {
-    const { data } = await axios.put("/api/user/" + id, formdata);
+    const { data } = await axiosInstance.put("/user/" + id, formdata);
     toast.success(data.message);
     setFile(null);
     return data.updatedUser; // return updated user
@@ -90,7 +90,7 @@ async function updateProfilePic(id, formdata, setFile) {
 
   async function updateProfileName(id, name, setShowInput) {
     try {
-      const { data } = await axios.put("/api/user/" + id, { name });
+      const { data } = await axiosInstance.put("/user/" + id, { name });
       toast.success(data.message);
       fetchUser();
       setShowInput(false);

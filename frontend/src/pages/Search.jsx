@@ -1,4 +1,4 @@
-  import axios from "axios";
+  import axiosInstance from "../api/axiosInstance.js";
   import React, { useState } from "react";
   import { Link } from "react-router-dom";
   import { LoadingAnimation } from "../components/Loading";
@@ -10,7 +10,7 @@
     async function fetchUsers() {
       setLoading(true);
       try {
-        const { data } = await axios.get("/api/user/all?search=" + search); //This is the backend route that returns all users.
+        const { data } = await axiosInstance.get("/user/all?search=" + search); //This is the backend route that returns all users.
 
         setUsers(data);
         setLoading(false);

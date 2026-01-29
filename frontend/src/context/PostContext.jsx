@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance.js";
 import { createContext, useContext, useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { Loading } from "../components/Loading";
@@ -14,7 +14,7 @@ export const PostContextProvider = ({ children }) => {
   async function fetchPosts() {
     setLoading(true);
     try {
-      const { data } = await axios.get("/api/post/all");
+      const { data } = await axiosInstance.get("/post/all");
       setPosts(data.posts);
       setReels(data.reels);
     } catch (error) {
@@ -27,7 +27,7 @@ export const PostContextProvider = ({ children }) => {
   async function addPost(formdata, setFile, setFilePrev, setCaption, type) {
     setAddLoading(true);
     try {
-      const { data } = await axios.post("/api/post/new?type=" + type, formdata);
+      const { data } = await axiosInstance.post("/post/new?type=" + type, formdata);
       toast.success(data.message);
       fetchPosts();
       setFile("");
@@ -48,7 +48,7 @@ export const PostContextProvider = ({ children }) => {
     try {
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       
-      const { data } = await axios.post(`/api/post/like/${id}`);
+      const { data } = await axiosInstance.post(`/post/like/${id}`);
       toast.success(data.message);
       
       await fetchPosts();
@@ -68,7 +68,7 @@ export const PostContextProvider = ({ children }) => {
     try {
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       
-      const { data } = await axios.post(`/api/post/comment/${id}`, { comment });
+      const { data } = await axiosInstance.post(`/post/comment/${id}`, { comment });
       toast.success(data.message);
       
       await fetchPosts();
@@ -89,8 +89,8 @@ export const PostContextProvider = ({ children }) => {
 
   async function deleteComment(id, commentId) {
     try {
-      const { data } = await axios.delete(
-        `/api/post/comment/${id}?commentId=${commentId}`
+      const { data } = await axiosInstance.delete(
+        `/post/comment/${id}?commentId=${commentId}`
       );
       toast.success(data.message);
       fetchPosts();
@@ -102,7 +102,7 @@ export const PostContextProvider = ({ children }) => {
   async function deletePost(id) {
     setLoading(true);
     try {
-      const { data } = await axios.delete(`/api/post/${id}`);
+      const { data } = await axiosInstance.delete(`/post/${id}`);
       toast.success(data.message);
       fetchPosts();
     } catch (error) {
