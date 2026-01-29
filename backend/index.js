@@ -8,7 +8,13 @@ import { isAuth } from './middlewares/isAuth.js';
 import { User } from './models/userModel.js';
 import { app, server } from "./Socket/socket.js";
 
-dotenv.config();
+dotenv.config({ path: './backend/.env' });
+
+// Debug: Check if environment variables are loaded
+console.log('Environment variables loaded:');
+console.log('PORT:', process.env.PORT);
+console.log('MONGO_URL:', process.env.MONGO_URL);
+console.log('JWT_SEC:', process.env.JWT_SEC ? 'Loaded' : 'Not loaded');
 cloudinary.v2.config({
     cloud_name: process.env.Cloudinary_Cloud_Name,  
     api_key: process.env.Cloudinary_Api,            
@@ -18,7 +24,21 @@ cloudinary.v2.config({
 app.use(express.json());
 app.use(cookieParser());
 
-const port = 7000;
+// CORS configuration
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
+
+const port = process.env.PORT || 3001;
 
 app.get("/", (req, res) => {
     res.send("server is working");
