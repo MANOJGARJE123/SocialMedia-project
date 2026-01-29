@@ -34,12 +34,14 @@ const allowedOrigins = [
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     
-    // In production, allow all origins (or you can restrict to specific domains)
+    // Always set CORS headers
     if (allowedOrigins.includes(origin)) {
         res.header('Access-Control-Allow-Origin', origin);
     } else if (process.env.NODE_ENV === 'production') {
-        // Allow all origins in production, or set to specific production domain
         res.header('Access-Control-Allow-Origin', origin || '*');
+    } else {
+        // In development, allow the origin even if not in list
+        res.header('Access-Control-Allow-Origin', origin || 'http://localhost:5173');
     }
     
     res.header('Access-Control-Allow-Credentials', 'true');
