@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.MODE === 'production'
-  ? 'https://socialmedia-project-backend.onrender.com/api'
+  ? 'https://mcahub-backend.onrender.com/api'
   : 'http://localhost:3001/api';
 
 const axiosInstance = axios.create({
