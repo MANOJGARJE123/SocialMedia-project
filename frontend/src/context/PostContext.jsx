@@ -49,16 +49,15 @@ export const PostContextProvider = ({ children }) => {
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       
       const { data } = await axiosInstance.post(`/post/like/${id}`);
-      toast.success(data.message);
       
       await fetchPosts();
       
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         window.scrollTo({
           top: scrollPosition,
           behavior: 'instant'
         });
-      });
+      }, 0);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to like post");
     }
@@ -71,17 +70,16 @@ export const PostContextProvider = ({ children }) => {
       const { data } = await axiosInstance.post(`/post/comment/${id}`, { comment });
       toast.success(data.message);
       
+      setComment("");
+      
       await fetchPosts();
       
-      setComment("");
-      setShow(false);
-      
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         window.scrollTo({
           top: scrollPosition,
           behavior: 'instant'
         });
-      });
+      }, 0);
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to add comment");
     }
@@ -89,11 +87,21 @@ export const PostContextProvider = ({ children }) => {
 
   async function deleteComment(id, commentId) {
     try {
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+      
       const { data } = await axiosInstance.delete(
         `/post/comment/${id}?commentId=${commentId}`
       );
       toast.success(data.message);
-      fetchPosts();
+      
+      await fetchPosts();
+      
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant'
+        });
+      }, 0);
     } catch (error) {
       toast.error(error.response.data.message);
     }

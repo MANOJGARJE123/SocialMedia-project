@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import AddPost from "../components/AddPost";
 import PostCard from "../components/PostCard";
 import { PostData } from "../context/PostContext";
-import UsersSideBar from "../components/UsersSideBar"; // <-- import your sidebar
 
 const Home = () => {
   const { posts, loading } = PostData(); //Accesses all posts and a loading state from the PostContext.
@@ -14,11 +13,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-[#0f172a] to-[#0b1220]">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6 flex gap-5">
-        <div className="hidden md:block w-64 shrink-0">
-          <UsersSideBar />
-        </div>
-
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-6">
         <div className="flex-1">
           <div className="rounded-2xl p-0.5 bg-gradient-to-r from-purple-500/60 via-cyan-400/60 to-emerald-400/60">
             <div className="rounded-2xl bg-white/10 backdrop-blur-md">

@@ -23,6 +23,7 @@ const PostCard = ({ type, value, layout = "grid" }) => {
   const [showModal, setShowModal] = useState(false);
   const [caption, setCaption] = useState(value.caption || "");
   const [captionLoading, setCaptionLoading] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
 
   const { user } = UserData();
   const { likePost, addComment, deletePost, fetchPosts } = PostData();
@@ -205,15 +206,19 @@ const PostCard = ({ type, value, layout = "grid" }) => {
 
         {show && (
           <div className="px-5 pb-5">
-            <form className="flex gap-3" onSubmit={handleCommentSubmit}>
+            <form className="flex gap-2 items-center" onSubmit={handleCommentSubmit}>
               <input
                 type="text"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="custom-input flex-1"
-                placeholder="Enter comment"
+                className="flex-1 px-4 py-2.5 border-2 border-gray-200 rounded-lg focus:border-cyan-400 focus:ring-2 focus:ring-cyan-200 transition-all duration-200 outline-none text-gray-700 bg-white"
+                placeholder="Add a comment..."
+                required
               />
-              <button className="bg-gradient-to-r from-cyan-400 to-emerald-400 text-white rounded-lg px-5 py-2" type="submit">
+              <button 
+                className="bg-gradient-to-r from-cyan-400 to-emerald-400 text-white rounded-lg px-4 py-2.5 font-semibold hover:from-cyan-500 hover:to-emerald-500 transition-all whitespace-nowrap flex-shrink-0" 
+                type="submit"
+              >
                 Add
               </button>
             </form>
@@ -227,7 +232,25 @@ const PostCard = ({ type, value, layout = "grid" }) => {
           <div className="mt-4">
             <div className="comments max-h-[200px] overflow-y-auto">
               {value.comments && value.comments?.length > 0 ? (
-                value.comments.map((comment) => <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />)
+                <>
+                  {/* Show first 2 comments or all based on state */}
+                  {(showAllComments ? value.comments : value.comments.slice(0, 2)).map((comment) => (
+                    <Comment key={comment._id} value={comment} user={user} owner={value.owner._id} id={value._id} />
+                  ))}
+                  
+                  {/* Show "View All" or "Show Less" button if more than 2 comments */}
+                  {value.comments.length > 2 && (
+                    <button
+                      onClick={() => setShowAllComments(!showAllComments)}
+                      className="mt-3 text-blue-400 hover:text-blue-300 text-sm font-semibold transition-colors"
+                    >
+                      {showAllComments 
+                        ? `Show Less` 
+                        : `View all ${value.comments.length} comments`
+                      }
+                    </button>
+                  )}
+                </>
               ) : (
                 <p className="text-white/70">No Comments</p>
               )}
