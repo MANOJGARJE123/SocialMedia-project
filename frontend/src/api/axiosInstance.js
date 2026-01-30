@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.MODE === 'production'
-  ? 'https://mcahub-backend.onrender.com/api'
-  : 'http://localhost:3001/api';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+const API_BASE_URL = `${BACKEND_URL}/api`;
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

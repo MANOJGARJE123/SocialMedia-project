@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { UserData } from "./UserContext";
 
-const EndPoint = "https://socialmedia-project-backend.onrender.com"; 
+const EndPoint = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'; 
 
 const SocketContext = createContext(); 
 

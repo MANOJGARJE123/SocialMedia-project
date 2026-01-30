@@ -34,7 +34,7 @@ export const UserContextProvider = ({ children }) => {
       setIsAuth(true); //user now authenticated
       setUser(data.user); // store user info
       navigate("/");
-      fetchPosts
+      fetchPosts();
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
     }
