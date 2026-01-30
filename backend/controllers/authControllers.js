@@ -75,7 +75,14 @@ export const loginUser = TryCatch(async(req,res) => {
 });
 
 export const logoutUser = TryCatch((req,res)=>{
-    res.cookie("token","",{maxAge:0})
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    res.cookie("token","",{
+        maxAge:0,
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "strict",
+    })
 
     res.json({
         message:"Logged out successfully"

@@ -28,25 +28,23 @@ app.use(cookieParser());
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://socialmedia-project-frontend.onrender.com',
 ];
+
+// Add production frontend URL if available
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
     
-    // Always set CORS headers
-    if (allowedOrigins.includes(origin)) {
-        res.header('Access-Control-Allow-Origin', origin);
-    } else if (process.env.NODE_ENV === 'production') {
+    // Check if origin is allowed
+    if (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'production') {
         res.header('Access-Control-Allow-Origin', origin || '*');
-    } else {
-        // In development, allow the origin even if not in list
-        res.header('Access-Control-Allow-Origin', origin || 'http://localhost:5173');
+        res.header('Access-Control-Allow-Credentials', 'true');
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
-    
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
